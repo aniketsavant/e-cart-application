@@ -10,6 +10,7 @@ import { OrderListComponent } from './components/main-outlet/order-list/order-li
 import { ProductListComponent } from './components/main-outlet/pruduct/product-list/product-list.component';
 import { CatogoriesComponent } from './components/main-outlet/catogories/catogories.component';
 import { AddProductComponent } from './components/main-outlet/pruduct/add-product/add-product.component';
+import { SignUpComponent } from './components/auth-pages/sign-up/sign-up.component';
 
 const routes: Routes = [
   {
@@ -22,13 +23,11 @@ const routes: Routes = [
     component: LoginComponent,
     canActivate:[ CanActivateViaAuthGuardForLogin ]
   },
-  // {
-  //   path: 'register',
-  //   component: RegisterComponent,
-  //   data: {
-  //     title: 'Register Page'
-  //   }
-  // },
+  {
+    path: 'register',
+    component: SignUpComponent,
+    canActivate:[ CanActivateViaAuthGuardForLogin ]
+  },
   {
     path: '',
     component: MainOutletComponent,

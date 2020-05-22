@@ -1,10 +1,15 @@
 import { Component, OnInit , Input, Output, EventEmitter} from '@angular/core';
 import { CONSTANT } from '../../../../constants/constants';
+import { AlertConfig } from 'ngx-bootstrap/alert';
 
+export function getAlertConfig(): AlertConfig {
+  return Object.assign(new AlertConfig(), { type: 'success' });
+}
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.scss']
+  styleUrls: ['./add-product.component.scss'],
+  providers: [{ provide: AlertConfig, useFactory: getAlertConfig }]
 })
 export class AddProductComponent implements OnInit {
 
@@ -15,6 +20,7 @@ export class AddProductComponent implements OnInit {
     saveButtonClass:'',
     cardHeaderName: ''
   }
+  public urls = new Array<string>();
   constructor() { }
 
   ngOnInit(): void {
@@ -33,4 +39,24 @@ export class AddProductComponent implements OnInit {
     }
   }
 
+  public onImagechange(event): void {
+    this.urls = [];
+    let files = event.target.files;
+    if (files) {
+      for (let file of files) {
+        var mimeType = file.type;
+      if (mimeType.match(/image\/*/) == null) {
+        alert("Only images are supported.");
+        return;
+      } else {
+        let reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.urls.push(e.target.result);
+        }
+        reader.readAsDataURL(file);
+      }
+        
+      }
+    }
+  }
 }

@@ -1,46 +1,283 @@
 <div class="card">
-    <div class="card-header">
-      <strong>{{setProductValue?.cardHeaderName}}</strong>
-    </div>
-    <div class="card-body">
-      <div class="form-group">
-        <label for="company">Category Name</label>
-        <input type="text" class="form-control" id="category_name" placeholder="Enter category name">
-      </div>
-      <div class="form-group">
-        <label for="vat">Category Discription</label>
-        <input type="text" class="form-control" id="vat" placeholder="Enter category siscription">
-      </div>
-      <div class="form-group">
-        <label for="street">Street</label>
-        <input type="text" class="form-control" id="street" placeholder="Enter street name">
-      </div>
-      <div class="row">
-        <div class="form-group col-sm-8">
-          <label for="city">City</label>
-          <input type="text" class="form-control" id="city" placeholder="Enter your city">
-        </div>
-        <div class="form-group col-sm-4">
-          <label for="postal-code">Postal Code</label>
-          <input type="text" class="form-control" id="postal-code" placeholder="Postal Code">
-        </div>
-      </div><!--/.row-->
-      <div class="form-group">
-        <label for="country">Country</label>
-        <input type="text" class="form-control" id="country" placeholder="Country name">
-      </div>
-      <div class="row">
-          <div class="col-6"></div>
+  <div class="card-header">
+    <strong>{{ setProductValue?.cardHeaderName }}</strong>
+  </div>
+  <div class="card-body">
+    <label><strong>Basic Product Information.</strong></label>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
           <div class="col-6">
+            <div class="form-group">
+              <label for="company">Select Category</label>
+              <select id="city" name="City" class="form-control">
+                <option value="0">Select category</option>
+                <option value="1">Solpur</option>
+                <option value="2">Pune</option>
+                <option value="3">Mumbai</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="company">Select Sub Category</label>
+              <select id="city" name="City" class="form-control">
+                <option value="0">Select sub category</option>
+                <option value="1">Solpur</option>
+                <option value="2">Pune</option>
+                <option value="3">Mumbai</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label for="company">Product Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="category_name"
+                placeholder="Enter product name"
+              />
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="company">Product Quantity(Available)/Unit</label>
               <div class="row">
                 <div class="col-6">
-                    <button type="button" [ngClass]="setProductValue.saveButtonClass" (click)="onSaveChangesClick()">{{setProductValue.saveButtonName}}</button>
-                  </div>
-                  <div class="col-6">
-                    <button type="button" class="btn btn-block btn-dark" (click)="onCloseClick()">Close</button>
-                  </div>
+                  <input
+                    type="number"
+                    min="0"
+                    class="form-control"
+                    id="category_name"
+                    placeholder="Enter product quantity"
+                  />
+                </div>
+                <div class="col-6">
+                  <select id="city" name="City" class="form-control">
+                    <option value="0">Select Unit</option>
+                    <option value="1">Kilogram</option>
+                    <option value="2">packat</option>
+                    <option value="3">Liter</option>
+                  </select>
+                </div>
               </div>
+            </div>
           </div>
+        </div>
+        <div class="form-group">
+          <label for="textarea-input">Product Discription</label>
+          <textarea
+            id="textarea-input"
+            name="textarea-input"
+            rows="3"
+            class="form-control"
+            placeholder="Discribe more about this product.."
+          ></textarea>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="file-multiple-input"
+            >Choose Photos</label
+          >
+          <div class="col-md-9">
+            <input
+              type="file"
+              id="file-multiple-input"
+              name="file-multiple-input"
+              multiple
+              (change)="onImagechange($event)"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <img
+            *ngFor="let url of urls"
+            [src]="url"
+            class="rounded mb-3 showSelectedImages"
+            width="180"
+          />
+        </div>
+      </div>
+    </div>
+
+    <label><strong>Product Offer(Discount) Information.</strong></label>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="company">Offer Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="category_name"
+                placeholder="Enter offer name"
+              />
+            </div>
+          </div>
+          <div class="col-5">
+            <div class="form-group">
+              <label for="company">Product Quantity/Unit</label>
+              <div class="row">
+                <div class="col-8">
+                  <input
+                    type="number"
+                    min="0"
+                    class="form-control"
+                    id="category_name"
+                    placeholder="Enter product quantity"
+                  />
+                </div>
+                <div class="col-4">
+                  <select id="city" name="City" class="form-control">
+                    <option value="0">Select Unit</option>
+                    <option value="1">Kilogram</option>
+                    <option value="2">packat</option>
+                    <option value="3">Liter</option>
+                  </select>
+                </div>
+              </div>
+            </div>          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="company">Product Price (As per quantity)</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                id="category_name"
+                placeholder="Enter product price"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label for="company">Discount Rate/Unit</label>
+              <div class="row">
+                <div class="col-8">
+                  <input
+                    type="number"
+                    min="0"
+                    class="form-control"
+                    id="category_name"
+                    placeholder="Enter product quantity"
+                  />
+                </div>
+                <div class="col-4">
+                  <select id="city" name="City" class="form-control">
+                    <option value="0">Select Unit</option>
+                    <option value="1">Price (Rupee)</option>
+                    <option value="2">Percentage (%)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-group">
+              <label for="company">Product Discount Price</label>
+              <input
+                type="text"
+                class="form-control"
+                id="category_name"
+                placeholder=" Discount Price"
+              />
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="button"></label>
+            <button
+              type="button"
+              class="btn btn-block btn-warning saveOfferButton"
+              (click)="onCloseClick()"
+            >
+              Add Offer
+            </button>
+          </div>
+        </div>
+        <label><strong>Added Offer List (Manage Offers).</strong></label>
+        <div class="row">
+          <div class="col-4">
+            <alert type="info">
+              <div class="row">
+                <div class="col-10">
+                  50% Discount on 10/kg
+                </div>
+                <div class="col-2">
+                  <a href=""> <i class="icon-close icons"></i></a>
+                </div>
+              </div>
+            </alert>
+          </div>
+          <div class="col-4">
+            <alert type="info">
+              <div class="row">
+                <div class="col-10">
+                  50% Discount on 10/kg
+                </div>
+                <div class="col-2">
+                  <a href=""> <i class="icon-close icons"></i></a>
+                </div>
+              </div>
+            </alert>
+          </div>
+          <div class="col-4">
+            <alert type="info">
+              <div class="row">
+                <div class="col-10">
+                  50% Discount on 10/kg
+                </div>
+                <div class="col-2">
+                  <a href=""> <i class="icon-close icons"></i></a>
+                </div>
+              </div>
+            </alert>
+          </div>
+          <div class="col-4">
+            <alert type="info">
+              <div class="row">
+                <div class="col-10">
+                  50% Discount on 10/kg
+                </div>
+                <div class="col-2">
+                  <a href=""> <i class="icon-close icons"></i></a>
+                </div>
+              </div>
+            </alert>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6"></div>
+      <div class="col-6">
+        <div class="row">
+          <div class="col-6">
+            <button
+              type="button"
+              [ngClass]="setProductValue.saveButtonClass"
+              (click)="onSaveChangesClick()"
+            >
+              {{ setProductValue.saveButtonName }}
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              type="button"
+              class="btn btn-block btn-dark"
+              (click)="onCloseClick()"
+            >
+              Close
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>

@@ -29,6 +29,7 @@ export class CatogoriesComponent implements OnInit {
     saveButtonName: '',
     saveButtonClass:''
   }
+  public isSubCategoryForm: boolean = false;
 
   constructor() { }
 
@@ -38,6 +39,10 @@ export class CatogoriesComponent implements OnInit {
   public onAddCategoryClick(): void {
     this.modelValues = CONSTANT.FOR_CATEGORY_SAVE;
     this.modelForAddEditCategory.show();
+  }
+
+  public onAddSubCategoryClick(): void {
+    this.isSubCategoryForm = true;
   }
 
   public onEditCategoryClick(): void{

@@ -10,19 +10,12 @@ import { httpOptions } from '../constants/httpHeaders';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class MainService {
 
   constructor(private http: HttpClient) { }
 
-  public loginCall (requestPayload: any): Observable<any> {
+  public getCategoryCall (requestPayload: any): Observable<any> {
     return this.http.post<any>(`${environment.BASE_URL}${LOGIN_CONSTANTS.LOGIN_URL}`, requestPayload, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  public registrationCall (requestPayload: any): Observable<any> {
-    return this.http.post<any>(`${environment.BASE_URL}${LOGIN_CONSTANTS.REGISTRATION_URL}`, requestPayload, httpOptions)
       .pipe(
         catchError(this.handleError)
       );

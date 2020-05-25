@@ -226,21 +226,42 @@
         <!-- <p>One fine body&hellip;</p> -->
         <div class="card">
           <div class="card-body">
+            <div class="form-group" *ngIf="isSubCategoryForm">
+              <label for="category">Select Category:</label>
+                <select id="select1" name="select1" class="form-control">
+                  <option value="1">Vegitale</option>
+                  <option value="2">Fruits</option>
+                  <option value="3">Milk Product</option>
+                </select>
+            </div>
             <div class="form-group">
-                <label for="company">Category Name</label>
-                <input type="text" class="form-control" id="category_name" placeholder="Enter category name">
+              <label for="company">{{ modelValues.name }}</label>
+              <input
+                type="text"
+                class="form-control"
+                id="category_name"
+                placeholder="Enter name here.."
+              />
+            </div>
+            <div class="form-group">
+              <label for="vat">{{ modelValues.discription }}</label>
+              <textarea
+                id="textarea-input"
+                name="textarea-input"
+                rows="5"
+                class="form-control"
+                placeholder="Enter discription here.."
+              ></textarea>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="file-input"
+                >File input</label
+              >
+              <div class="col-md-9">
+                <input type="file" id="file-input" name="file-input" />
               </div>
-              <div class="form-group">
-                <label for="vat">Category Discription</label>
-                <textarea id="textarea-input" name="textarea-input" rows="5" class="form-control" placeholder="Enter category discription.."></textarea>
-              </div>
-              <div class="form-group row">
-                <label class="col-md-3 col-form-label" for="file-input">File input</label>
-                <div class="col-md-9">
-                  <input type="file" id="file-input" name="file-input">
-                </div>
-              </div>
-              ( Note: Chooes better quality image for better result)
+            </div>
+            ( Note: Chooes better quality image for better result)
           </div>
         </div>
       </div>
@@ -252,7 +273,9 @@
         >
           Close
         </button>
-        <button type="button" [ngClass]="modelValues?.saveButtonClass">{{modelValues?.saveButtonName}}</button>
+        <button type="button" [ngClass]="modelValues?.saveButtonClass">
+          {{ modelValues?.saveButtonName }}
+        </button>
       </div>
     </div>
     <!-- /.modal-content -->

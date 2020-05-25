@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { LoginService } from '../../../services/login.service';
 import { UserData } from '.././../../interfaces/iAuthPages';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: FormGroup;
+  private loginSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -33,19 +35,25 @@ export class LoginComponent implements OnInit {
   }
 
   public onLoginClick(): void {
-    this.loginService
-      .loginCall(this.loginForm.value)
-      .subscribe((res: UserData) => {
-        if (res) {
-          this.toastr.success('You can proceed now..', 'Login Successfull..!!');
+    // (this.loginSubscription = this.loginService
+    //   .loginCall(this.loginForm.value)
+    //   .subscribe((res: UserData) => {
+    //     if (res) {
+    //       this.toastr.success('You can proceed now..', 'Login Successfull..!!');
           localStorage.setItem('isLoggedIn', 'true');
           this.router.navigateByUrl('/dashboard');
-        } else {
-        }
-      }),
-      (err) => {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
-        console.log('Error', err);
-      };
+    //     } else {
+    //     }
+    //   })),
+    //   (err) => {
+    //     this.toastr.error('Somthing wrong', 'Oops.!!');
+    //     console.log('Error', err);
+    //   };
+  }
+
+  ngOnDestroy() {
+    if(this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
+    }
   }
 }

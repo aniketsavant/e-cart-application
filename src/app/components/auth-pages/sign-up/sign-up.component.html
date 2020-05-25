@@ -150,6 +150,11 @@
                   class="text-danger"
                   >Repeat password is required</small
                 >
+                <small
+                  *ngIf="registerForm.hasError('notSame')"
+                  class="text-danger"
+                  >Repeat password and repeate password must be match.</small
+                >
               </div>
                 <p class="text-muted">Address information</p>
                 <div class="input-group mb-3">

@@ -25,8 +25,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group(
       {
-        fullName: ['', Validators.required],
-        phoneNumber: ['', Validators.required],
+        fullName: [
+          '',
+          [Validators.required, Validators.pattern('^[A-Za-z]+$')],
+        ],
+        phoneNumber: [
+          '',
+          [Validators.required, Validators.pattern('^[0-9]+$')],
+        ],
         email: [
           '',
           [
@@ -84,7 +90,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
           latitude: '',
           longitude: '',
         },
-      ]
+      ],
     };
   }
 
@@ -99,5 +105,4 @@ export class SignUpComponent implements OnInit, OnDestroy {
       this.registartionSubscription.unsubscribe();
     }
   }
-  
 }

@@ -3,281 +3,475 @@
     <strong>{{ setProductValue?.cardHeaderName }}</strong>
   </div>
   <div class="card-body">
-    <label><strong>Basic Product Information.</strong></label>
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group">
-              <label for="company">Select Category</label>
-              <select id="city" name="City" class="form-control">
-                <option value="0">Select category</option>
-                <option value="1">Solpur</option>
-                <option value="2">Pune</option>
-                <option value="3">Mumbai</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="form-group">
-              <label for="company">Select Sub Category</label>
-              <select id="city" name="City" class="form-control">
-                <option value="0">Select sub category</option>
-                <option value="1">Solpur</option>
-                <option value="2">Pune</option>
-                <option value="3">Mumbai</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group">
-              <label for="company">Product Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="category_name"
-                placeholder="Enter product name"
-              />
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="form-group">
-              <label for="company">Product Quantity(Available)/Unit</label>
-              <div class="row">
-                <div class="col-6">
-                  <input
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    id="category_name"
-                    placeholder="Enter product quantity"
-                  />
+    <form [formGroup]="productForm">
+      <label><strong>Basic Product Information.</strong></label>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="company"
+                  >Product Category<span class="text-danger"
+                    >&nbsp;*</span
+                  ></label
+                >
+                <select
+                  id="city"
+                  name="City"
+                  class="form-control"
+                  formControlName="productCategory"
+                >
+                  <option value="">Select Category</option>
+                  <option value="1">Solapur</option>
+                  <option value="2">Pune</option>
+                  <option value="3">Mumbai</option>
+                </select>
+                <div
+                  *ngIf="
+                    (f.productCategory.invalid && f.productCategory.touched) ||
+                    f.productCategory.dirty
+                  "
+                >
+                  <small
+                    *ngIf="f.productCategory.errors?.required"
+                    class="text-danger"
+                    >Product category is required</small
+                  >
                 </div>
-                <div class="col-6">
-                  <select id="city" name="City" class="form-control">
-                    <option value="0">Select Unit</option>
-                    <option value="1">Kilogram</option>
-                    <option value="2">packat</option>
-                    <option value="3">Liter</option>
-                  </select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="company"
+                  >Product Sub Category<span class="text-danger"
+                    >&nbsp;*</span
+                  ></label
+                >
+                <select
+                  id="city"
+                  name="City"
+                  class="form-control"
+                  formControlName="productSubCategory"
+                >
+                  <option value="">Select Sub Category</option>
+                  <option value="1">Solapur</option>
+                  <option value="2">Pune</option>
+                  <option value="3">Mumbai</option>
+                </select>
+                <div
+                  *ngIf="
+                    (f.productSubCategory.invalid &&
+                      f.productSubCategory.touched) ||
+                    f.productSubCategory.dirty
+                  "
+                >
+                  <small
+                    *ngIf="f.productSubCategory.errors?.required"
+                    class="text-danger"
+                    >Product sub category is required</small
+                  >
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="textarea-input">Product Discription</label>
-          <textarea
-            id="textarea-input"
-            name="textarea-input"
-            rows="3"
-            class="form-control"
-            placeholder="Discribe more about this product.."
-          ></textarea>
-        </div>
-        <div class="form-group row">
-          <label class="col-md-3 col-form-label" for="file-multiple-input"
-            >Choose Photos</label
-          >
-          <div class="col-md-9">
-            <input
-              type="file"
-              id="file-multiple-input"
-              name="file-multiple-input"
-              multiple
-              (change)="onImagechange($event)"
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="company"
+                  >Product Name<span class="text-danger">&nbsp;*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="category_name"
+                  placeholder="Enter product name"
+                  formControlName="productName"
+                />
+                <div
+                  *ngIf="
+                    (f.productName.invalid && f.productName.touched) ||
+                    f.productName.dirty
+                  "
+                >
+                  <small
+                    *ngIf="f.productName.errors?.required"
+                    class="text-danger"
+                    >Product name is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="company"
+                  >Product Quantity(Available)/Unit<span class="text-danger"
+                    >&nbsp;*</span
+                  ></label
+                >
+                <div class="row">
+                  <div class="col-6">
+                    <input
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      id="category_name"
+                      placeholder="Enter product quantity"
+                      formControlName="productQuantity"
+                    />
+                    <div
+                      *ngIf="
+                        (f.productQuantity.invalid &&
+                          f.productQuantity.touched) ||
+                        f.productQuantity.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.productQuantity.errors?.required"
+                        class="text-danger"
+                        >Product quantity is required</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <select
+                      id="city"
+                      name="City"
+                      class="form-control"
+                      formControlName="productUnit"
+                    >
+                      <option value="">Select Unit</option>
+                      <option value="Kg">Kilogram</option>
+                      <option value="Packat">Packat</option>
+                      <option value="Ltr">Liter</option>
+                    </select>
+                    <div
+                      *ngIf="
+                        (f.productUnit.invalid && f.productUnit.touched) ||
+                        f.productUnit.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.productUnit.errors?.required"
+                        class="text-danger"
+                        >Unit is required</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textarea-input">Product Discription</label>
+            <textarea
+              id="textarea-input"
+              name="textarea-input"
+              rows="3"
+              class="form-control"
+              placeholder="Discribe more about this product.."
+            ></textarea>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="file-multiple-input"
+              >Choose Photos<span class="text-danger">&nbsp;*</span></label
+            >
+            <div class="col-md-9">
+              <input
+                type="file"
+                id="file-multiple-input"
+                name="file-multiple-input"
+                multiple
+                (change)="onImagechange($event)"
+                formControlName="image"
+              />
+              <div
+                *ngIf="(f.image.invalid && f.image.touched) || f.image.dirty"
+              >
+                <small *ngIf="f.image.errors?.required" class="text-danger"
+                  >Image is required</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <img
+              *ngFor="let url of urls"
+              [src]="url"
+              class="rounded mb-3 showSelectedImages"
+              width="180"
             />
           </div>
         </div>
-        <div class="form-group">
-          <img
-            *ngFor="let url of urls"
-            [src]="url"
-            class="rounded mb-3 showSelectedImages"
-            width="180"
-          />
+      </div>
+
+      <label><strong>Product Offer(Discount) Information.</strong></label>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <label for="company"
+                  >Offer Name<span class="text-danger">&nbsp;*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="category_name"
+                  placeholder="Enter offer name"
+                  formControlName="offerName"
+                />
+                <div
+                  *ngIf="
+                    (f.offerName.invalid && f.offerName.touched) ||
+                    f.offerName.dirty
+                  "
+                >
+                  <small
+                    *ngIf="f.offerName.errors?.required"
+                    class="text-danger"
+                    >Offer name is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="form-group">
+                <label for="company"
+                  >Product Quantity/Unit<span class="text-danger"
+                    >&nbsp;*</span
+                  ></label
+                >
+                <div class="row">
+                  <div class="col-8">
+                    <input
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      id="category_name"
+                      placeholder="Enter product quantity"
+                      formControlName="offerProductQuantity"
+                    />
+                    <div
+                      *ngIf="
+                        (f.offerProductQuantity.invalid &&
+                          f.offerProductQuantity.touched) ||
+                        f.offerProductQuantity.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.offerProductQuantity.errors?.required"
+                        class="text-danger"
+                        >Product quantity is required</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <select
+                      id="city"
+                      name="City"
+                      class="form-control"
+                      formControlName="offerProductUnit"
+                    >
+                      <option value="">Select Unit</option>
+                      <option value="Kg">Kilogram</option>
+                      <option value="Packat">Packat</option>
+                      <option value="Ltr">Liter</option>
+                    </select>
+                    <div
+                      *ngIf="
+                        (f.offerProductUnit.invalid &&
+                          f.offerProductUnit.touched) ||
+                        f.offerProductUnit.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.offerProductUnit.errors?.required"
+                        class="text-danger"
+                        >Unit is required</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label for="company"
+                  >Product Price (As per quantity)<span class="text-danger"
+                    >&nbsp;*</span
+                  ></label
+                >
+                <input
+                  type="number"
+                  min="0"
+                  class="form-control"
+                  id="category_name"
+                  placeholder="Enter product price"
+                  formControlName="productPrice"
+                />
+                <div
+                  *ngIf="
+                    (f.productPrice.invalid && f.productPrice.touched) ||
+                    f.productPrice.dirty
+                  "
+                >
+                  <small
+                    *ngIf="f.productPrice.errors?.required"
+                    class="text-danger"
+                    >Product price is required</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="company"
+                  >Discount Rate/Unit<span class="text-danger"
+                    >&nbsp;*</span
+                  ></label
+                >
+                <div class="row">
+                  <div class="col-8">
+                    <input
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      id="category_name"
+                      placeholder="Enter discount rate"
+                      formControlName="discountRate"
+                    />
+                    <div
+                      *ngIf="
+                        (f.discountRate.invalid && f.discountRate.touched) ||
+                        f.discountRate.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.discountRate.errors?.required"
+                        class="text-danger"
+                        >Discount rate is required</small
+                      >
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <select
+                      id="city"
+                      name="City"
+                      class="form-control"
+                      formControlName="discountRateUnit"
+                    >
+                      <option value="">Select Unit</option>
+                      <option value="Rupee">Price (Rupee)</option>
+                      <option value="%">Percentage (%)</option>
+                    </select>
+                    <div
+                      *ngIf="
+                        (f.discountRateUnit.invalid &&
+                          f.discountRateUnit.touched) ||
+                        f.discountRateUnit.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.discountRateUnit.errors?.required"
+                        class="text-danger"
+                        >Unit is required</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label for="company"
+                  >Product Discount Price<span class="text-danger"
+                    >&nbsp;*</span
+                  ></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="category_name"
+                  placeholder=" Discount Price"
+                  formControlName="discountPrice"
+                />
+                <div
+                  *ngIf="
+                    (f.discountPrice.invalid && f.discountPrice.touched) ||
+                    f.discountPrice.dirty
+                  "
+                >
+                  <small
+                    *ngIf="f.discountPrice.errors?.required"
+                    class="text-danger"
+                    >Product discount price is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <label for="button"></label>
+              <button
+                type="button"
+                class="btn btn-block btn-warning saveOfferButton"
+                (click)="onAddOffer()"
+              >
+                Add Offer
+              </button>
+            </div>
+          </div>
+          <label><strong>Added Offer List (Manage Offers).</strong></label>
+          <div class="row" *ngIf="offerList.length > 0">
+            <div class="col-4" *ngFor="let item of offerList; let i = index">
+              <alert type="info">
+                <div class="row">
+                  <div class="col-10">
+                    {{ item.discountRate }}{{ item.discountRateUnit }} Discount
+                    on {{ item.offerProductQuantity }}/{{
+                      item.offerProductUnit
+                    }}
+                  </div>
+                  <div class="col-2">
+                    <a (click)="onRemoveOffer(i)">
+                      <i class="icon-close icons"></i
+                    ></a>
+                  </div>
+                </div>
+              </alert>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <label><strong>Product Offer(Discount) Information.</strong></label>
-
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-4">
-            <div class="form-group">
-              <label for="company">Offer Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="category_name"
-                placeholder="Enter offer name"
-              />
+      <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6">
+          <div class="row">
+            <div class="col-6">
+              <button
+                type="button"
+                [ngClass]="setProductValue.saveButtonClass"
+                (click)="onSaveChangesClick()"
+                [disabled]="this.productForm.invalid"
+              >
+                {{ setProductValue.saveButtonName }}
+              </button>
             </div>
-          </div>
-          <div class="col-5">
-            <div class="form-group">
-              <label for="company">Product Quantity/Unit</label>
-              <div class="row">
-                <div class="col-8">
-                  <input
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    id="category_name"
-                    placeholder="Enter product quantity"
-                  />
-                </div>
-                <div class="col-4">
-                  <select id="city" name="City" class="form-control">
-                    <option value="0">Select Unit</option>
-                    <option value="1">Kilogram</option>
-                    <option value="2">packat</option>
-                    <option value="3">Liter</option>
-                  </select>
-                </div>
-              </div>
-            </div>          </div>
-          <div class="col-3">
-            <div class="form-group">
-              <label for="company">Product Price (As per quantity)</label>
-              <input
-                type="number"
-                min="0"
-                class="form-control"
-                id="category_name"
-                placeholder="Enter product price"
-              />
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-block btn-dark"
+                (click)="onCloseClick()"
+              >
+                Close
+              </button>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group">
-              <label for="company">Discount Rate/Unit</label>
-              <div class="row">
-                <div class="col-8">
-                  <input
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    id="category_name"
-                    placeholder="Enter product quantity"
-                  />
-                </div>
-                <div class="col-4">
-                  <select id="city" name="City" class="form-control">
-                    <option value="0">Select Unit</option>
-                    <option value="1">Price (Rupee)</option>
-                    <option value="2">Percentage (%)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-3">
-            <div class="form-group">
-              <label for="company">Product Discount Price</label>
-              <input
-                type="text"
-                class="form-control"
-                id="category_name"
-                placeholder=" Discount Price"
-              />
-            </div>
-          </div>
-          <div class="col-3">
-            <label for="button"></label>
-            <button
-              type="button"
-              class="btn btn-block btn-warning saveOfferButton"
-              (click)="onCloseClick()"
-            >
-              Add Offer
-            </button>
-          </div>
-        </div>
-        <label><strong>Added Offer List (Manage Offers).</strong></label>
-        <div class="row">
-          <div class="col-4">
-            <alert type="info">
-              <div class="row">
-                <div class="col-10">
-                  50% Discount on 10/kg
-                </div>
-                <div class="col-2">
-                  <a href=""> <i class="icon-close icons"></i></a>
-                </div>
-              </div>
-            </alert>
-          </div>
-          <div class="col-4">
-            <alert type="info">
-              <div class="row">
-                <div class="col-10">
-                  50% Discount on 10/kg
-                </div>
-                <div class="col-2">
-                  <a href=""> <i class="icon-close icons"></i></a>
-                </div>
-              </div>
-            </alert>
-          </div>
-          <div class="col-4">
-            <alert type="info">
-              <div class="row">
-                <div class="col-10">
-                  50% Discount on 10/kg
-                </div>
-                <div class="col-2">
-                  <a href=""> <i class="icon-close icons"></i></a>
-                </div>
-              </div>
-            </alert>
-          </div>
-          <div class="col-4">
-            <alert type="info">
-              <div class="row">
-                <div class="col-10">
-                  50% Discount on 10/kg
-                </div>
-                <div class="col-2">
-                  <a href=""> <i class="icon-close icons"></i></a>
-                </div>
-              </div>
-            </alert>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col-6"></div>
-      <div class="col-6">
-        <div class="row">
-          <div class="col-6">
-            <button
-              type="button"
-              [ngClass]="setProductValue.saveButtonClass"
-              (click)="onSaveChangesClick()"
-            >
-              {{ setProductValue.saveButtonName }}
-            </button>
-          </div>
-          <div class="col-6">
-            <button
-              type="button"
-              class="btn btn-block btn-dark"
-              (click)="onCloseClick()"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    </form>
   </div>
 </div>

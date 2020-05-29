@@ -71,18 +71,20 @@ export class SignUpComponent implements OnInit, OnDestroy {
   public getLoginPayload(): UserData {
     return {
       fName: this.registerForm.controls['fullName'].value,
+      consumerCode: 'ECART123',
       mobile: this.registerForm.controls['phoneNumber'].value,
+      email: this.registerForm.controls['email'].value,
       password: this.registerForm.controls['password'].value,
       userType: 'CUSTOMER',
-      // addresses: [
-      //   {
-      //     full_address: this.registerForm.controls['fullAddress'].value,
-      //     city: this.registerForm.controls['city'].value,
-      //     landmark: this.registerForm.controls['landmark'].value,
-      //     latitude: '',
-      //     longitude: '',
-      //   },
-      // ]
+      addresses: [
+        {
+          fullAddress: this.registerForm.controls['fullAddress'].value,
+          city: this.registerForm.controls['city'].value,
+          landmark: this.registerForm.controls['landmark'].value,
+          latitude: '',
+          longitude: '',
+        },
+      ]
     };
   }
 

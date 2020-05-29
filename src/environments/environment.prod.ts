@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  BASE_URL: "http://localhost:8686/foodstuff"
+  BASE_URL: "http://wesoftec.com/ecart/ecartapi/"
 };

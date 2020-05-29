@@ -1,6 +1,6 @@
 
 export interface Address {
-    full_address: string;
+    fullAddress: string;
     city: string;
     landmark: string;
     latitude: string;
@@ -10,6 +10,8 @@ export interface Address {
 export interface UserData {
     fName: string;
     mobile: string;
+    email: string;
+    consumerCode: string;
     password: string;
     userType: string;
     addresses?: Address[];

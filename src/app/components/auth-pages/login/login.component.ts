@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public onLoginClick(): void {
-    // (this.loginSubscription = this.loginService
+    // this.loginSubscription = this.loginService
     //   .loginCall(this.loginForm.value)
     //   .subscribe((res: UserData) => {
     //     if (res) {
@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigateByUrl('/dashboard');
     //     } else {
     //     }
-    //   })),
+    //   }),
     //   (err) => {
     //     this.toastr.error('Somthing wrong', 'Oops.!!');
     //     console.log('Error', err);

@@ -53,6 +53,8 @@ import { ProductListComponent } from './components/main-outlet/pruduct/product-l
 import { CatogoriesComponent } from './components/main-outlet/catogories/catogories.component';
 import { AddProductComponent } from './components/main-outlet/pruduct/add-product/add-product.component';
 import { SignUpComponent } from './components/auth-pages/sign-up/sign-up.component';
+import { CategoryService } from './services/category.service';
+import { LoginService } from './services/login.service';
 
 @NgModule({
   declarations: [
@@ -95,7 +97,9 @@ import { SignUpComponent } from './components/auth-pages/sign-up/sign-up.compone
   ],
   providers: [
     CanActivateViaAuthGuardForDashboard,
-    CanActivateViaAuthGuardForLogin
+    CanActivateViaAuthGuardForLogin,
+    LoginService,
+    CategoryService
   ],
   bootstrap: [AppComponent]
 })

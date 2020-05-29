@@ -199,7 +199,7 @@
     </div>
   </div>
 </div>
-
+<!-- model for main category -->
 <div
   bsModal
   #modelForAddEditCategory="bs-modal"
@@ -216,70 +216,169 @@
         <button
           type="button"
           class="close"
-          (click)="modelForAddEditCategory.hide()"
+          (click)="onMainCategoryCloseClick()"
           aria-label="Close"
         >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <!-- <p>One fine body&hellip;</p> -->
-        <div class="card">
-          <div class="card-body">
-            <div class="form-group" *ngIf="isSubCategoryForm">
-              <label for="category">Select Category:</label>
-                <select id="select1" name="select1" class="form-control">
-                  <option value="1">Vegitale</option>
-                  <option value="2">Fruits</option>
-                  <option value="3">Milk Product</option>
-                </select>
-            </div>
-            <div class="form-group">
-              <label for="company">{{ modelValues.name }}</label>
-              <input
-                type="text"
-                class="form-control"
-                id="category_name"
-                placeholder="Enter name here.."
-              />
-            </div>
-            <div class="form-group">
-              <label for="vat">{{ modelValues.discription }}</label>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="5"
-                class="form-control"
-                placeholder="Enter discription here.."
-              ></textarea>
-            </div>
-            <div class="form-group row">
-              <label class="col-md-3 col-form-label" for="file-input"
-                >File input</label
-              >
-              <div class="col-md-9">
-                <input type="file" id="file-input" name="file-input" />
+      <form [formGroup]="addMainCategoryForm" (ngSubmit)="onAddEditMainCategoryClick()">
+        <div class="modal-body">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="company">{{ modelValues.name }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="category_name"
+                  placeholder="Enter name here.."
+                  formControlName="categoryName"
+                />
               </div>
+              <div class="form-group">
+                <label for="vat">{{ modelValues.discription }}</label>
+                <textarea
+                  id="textarea-input"
+                  name="textarea-input"
+                  rows="5"
+                  class="form-control"
+                  placeholder="Enter discription here.."
+                  formControlName="categoryDiscription"
+                ></textarea>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="file-input"
+                  >File input</label
+                >
+                <div class="col-md-9">
+                  <input
+                    type="file"
+                    id="file-input"
+                    name="file-input"
+                    formControlName="categoryImage"
+                    (change)="onFileChange($event)"
+                  />
+                </div>
+              </div>
+              ( Note: Chooes better quality image for better result)
             </div>
-            ( Note: Chooes better quality image for better result)
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="modelForAddEditCategory.hide()"
-        >
-          Close
-        </button>
-        <button type="button" [ngClass]="modelValues?.saveButtonClass">
-          {{ modelValues?.saveButtonName }}
-        </button>
-      </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onMainCategoryCloseClick()"
+          >
+            Close
+          </button>
+          <button type="submit" [ngClass]="modelValues?.saveButtonClass" [disabled]="!addMainCategoryForm.valid">
+            {{ modelValues?.saveButtonName }}
+          </button>
+        </div>
+      </form>
     </div>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->
+
+<!-- model for sub category -->
+<div
+  bsModal
+  #modelForAddEditSubCategory="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div [ngClass]="modelValues?.modelClass" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ modelValues.modelTitle }}</h4>
+        <button
+          type="button"
+          class="close"
+          (click)="onSubCategoryCloseClick()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="addSubCategoryForm" (ngSubmit)="onAddEditSubCategoryClick()">
+        <div class="modal-body">
+          <!-- <p>One fine body&hellip;</p> -->
+          <div class="card">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="category">Select Category:</label>
+                <select
+                  id="select1"
+                  name="select1"
+                  class="form-control"
+                  formControlName="selectedcategoryId"
+                >
+                  <option value="1">Vegitale</option>
+                  <option value="2">Fruits</option>
+                  <option value="3">Milk Product</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="company">{{ modelValues.name }}</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="category_name"
+                  placeholder="Enter name here.."
+                  formControlName="subCategoryName"
+                />
+              </div>
+              <div class="form-group">
+                <label for="vat">{{ modelValues.discription }}</label>
+                <textarea
+                  id="textarea-input"
+                  name="textarea-input"
+                  rows="5"
+                  class="form-control"
+                  placeholder="Enter discription here.."
+                  formControlName="subCategoryDiscription"
+                ></textarea>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="file-input"
+                  >File input</label
+                >
+                <div class="col-md-9">
+                  <input
+                    type="file"
+                    id="file-input"
+                    name="file-input"
+                    formControlName="subCategoryImage"
+                    (change)="onFileChange($event)"
+                  />
+                </div>
+              </div>
+              ( Note: Chooes better quality image for better result)
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onSubCategoryCloseClick()"
+          >
+            Close
+          </button>
+          <button type="submit" [ngClass]="modelValues?.saveButtonClass" [disabled]="!addSubCategoryForm.valid">
+            {{ modelValues?.saveButtonName }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

@@ -12,7 +12,7 @@ import { httpOptions } from '../constants/httpHeaders';
 export class CategoryService {
   constructor(private http: HttpClient) {}
 
-  public getCategoryListCall(): Observable<any> {
+  public getAllCategoryListCall(): Observable<any> {
     return this.http
       .get<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_CATEGORY_LIST}`,

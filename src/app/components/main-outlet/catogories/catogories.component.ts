@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../../../services/category.service';
 import { CONSTANT } from '../../../constants/constants';
-import { ModelValue } from '../../../interfaces/iCategory';
+import { ModelValue, GetCategoryList, Category} from '../../../interfaces/iCategory';
 
 export function getAlertConfig(): AlertConfig {
   return Object.assign(new AlertConfig(), { type: 'success' });
@@ -33,6 +33,7 @@ export class CatogoriesComponent implements OnInit {
   public isSubCategoryForm: boolean = false;
   public addMainCategoryForm: FormGroup;
   public addSubCategoryForm: FormGroup;
+  public allCategoryList: Category[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -54,11 +55,17 @@ export class CatogoriesComponent implements OnInit {
       subCategoryImage: ['', Validators.required],
       subCategoryImageFileSource: [''],
     });
+    this.getCategoryList();
   }
 
   private getCategoryList(): void {
-    this.categoryService.getCategoryListCall().subscribe((res) => {
+    this.categoryService.getAllCategoryListCall().subscribe((res: GetCategoryList) => {
       console.log(res);
+      if(res.status == 'Ok'){
+        this.allCategoryList = res.data;
+      } else {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+      }
       
     }),
       (err) => {

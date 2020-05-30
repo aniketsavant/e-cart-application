@@ -211,9 +211,7 @@
           <div class="row">
             <div class="col-4">
               <div class="form-group">
-                <label for="company"
-                  >Offer Name<span class="text-danger">&nbsp;*</span></label
-                >
+                <label for="company">Offer Name</label>
                 <input
                   type="text"
                   class="form-control"
@@ -221,18 +219,6 @@
                   placeholder="Enter offer name"
                   formControlName="offerName"
                 />
-                <div
-                  *ngIf="
-                    (f.offerName.invalid && f.offerName.touched) ||
-                    f.offerName.dirty
-                  "
-                >
-                  <small
-                    *ngIf="f.offerName.errors?.required"
-                    class="text-danger"
-                    >Offer name is required</small
-                  >
-                </div>
               </div>
             </div>
             <div class="col-5">
@@ -262,7 +248,7 @@
                       <small
                         *ngIf="f.offerProductQuantity.errors?.required"
                         class="text-danger"
-                        >Product quantity is required</small
+                        >Product quantity/Unit is required</small
                       >
                     </div>
                   </div>
@@ -310,29 +296,13 @@
                   placeholder="Enter product price"
                   formControlName="productPrice"
                 />
-                <div
-                  *ngIf="
-                    (f.productPrice.invalid && f.productPrice.touched) ||
-                    f.productPrice.dirty
-                  "
-                >
-                  <small
-                    *ngIf="f.productPrice.errors?.required"
-                    class="text-danger"
-                    >Product price is required</small
-                  >
-                </div>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-6">
               <div class="form-group">
-                <label for="company"
-                  >Discount Rate/Unit<span class="text-danger"
-                    >&nbsp;*</span
-                  ></label
-                >
+                <label for="company">Discount Rate/Unit</label>
                 <div class="row">
                   <div class="col-8">
                     <input
@@ -343,18 +313,6 @@
                       placeholder="Enter discount rate"
                       formControlName="discountRate"
                     />
-                    <div
-                      *ngIf="
-                        (f.discountRate.invalid && f.discountRate.touched) ||
-                        f.discountRate.dirty
-                      "
-                    >
-                      <small
-                        *ngIf="f.discountRate.errors?.required"
-                        class="text-danger"
-                        >Discount rate is required</small
-                      >
-                    </div>
                   </div>
                   <div class="col-4">
                     <select
@@ -367,30 +325,13 @@
                       <option value="Rupee">Price (Rupee)</option>
                       <option value="%">Percentage (%)</option>
                     </select>
-                    <div
-                      *ngIf="
-                        (f.discountRateUnit.invalid &&
-                          f.discountRateUnit.touched) ||
-                        f.discountRateUnit.dirty
-                      "
-                    >
-                      <small
-                        *ngIf="f.discountRateUnit.errors?.required"
-                        class="text-danger"
-                        >Unit is required</small
-                      >
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="col-3">
               <div class="form-group">
-                <label for="company"
-                  >Product Discount Price<span class="text-danger"
-                    >&nbsp;*</span
-                  ></label
-                >
+                <label for="company">Product Discount Price</label>
                 <input
                   type="text"
                   class="form-control"
@@ -398,18 +339,6 @@
                   placeholder=" Discount Price"
                   formControlName="discountPrice"
                 />
-                <div
-                  *ngIf="
-                    (f.discountPrice.invalid && f.discountPrice.touched) ||
-                    f.discountPrice.dirty
-                  "
-                >
-                  <small
-                    *ngIf="f.discountPrice.errors?.required"
-                    class="text-danger"
-                    >Product discount price is required</small
-                  >
-                </div>
               </div>
             </div>
             <div class="col-3">

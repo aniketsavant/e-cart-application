@@ -4,7 +4,8 @@ export const LOGIN_CONSTANTS = {
 };
 
 export const MAIN_URL_CONSTANTS = {
-  GET_CATEGORY_LIST: 'category.php',
+  GET_CATEGORY_LIST: 'getAllcategory.php',
+
   SAVE_MAIN_CATEGORY: 'insertcategory.php',
   UPDATE_CATEGORY: 'editcategory.php',
   DELETE_CATEGORY: 'deletecategory.php',

@@ -36,13 +36,13 @@ export class AddProductComponent implements OnInit {
       productName: ['', Validators.required],
       productQuantity: ['', Validators.required],
       productUnit: ['', Validators.required],
-      offerName: ['', Validators.required],
+      offerName: [''],
       offerProductQuantity: ['', Validators.required],
       offerProductUnit: ['', Validators.required],
       productPrice: ['', Validators.required],
-      discountRate: ['', Validators.required],
-      discountRateUnit: ['', Validators.required],
-      discountPrice: ['', Validators.required],
+      discountRate: [''],
+      discountRateUnit: [''],
+      discountPrice: [''],
       image: ['', Validators.required],
       offerList: [''],
     });
@@ -89,13 +89,9 @@ export class AddProductComponent implements OnInit {
 
   public onAddOffer() {
     if (
-      this.productForm.controls['offerName'].valid &&
       this.productForm.controls['offerProductQuantity'].valid &&
       this.productForm.controls['productPrice'].valid &&
-      this.productForm.controls['discountRate'].valid &&
-      this.productForm.controls['discountPrice'].valid &&
-      this.productForm.controls['offerProductUnit'].valid &&
-      this.productForm.controls['discountRateUnit'].valid
+      this.productForm.controls['offerProductUnit'].valid
     ) {
       this.offerList.push(this.productForm.value);
     }

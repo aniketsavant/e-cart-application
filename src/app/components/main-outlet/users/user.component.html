@@ -1,12 +1,12 @@
 <div class="animated fadeIn">
   <div class="card">
     <div class="card-header">
-      <strong> Order List</strong>
+      <strong> Users List</strong>
     </div>
     <div class="card-body">
       <alert type="info">
         <strong>Information!</strong> Please click on row to change the status
-        of order.
+        of Users.
       </alert>
       <div class="row mb-3">
         <div class="col-md-4 offset-md-8">
@@ -40,27 +40,23 @@
           </ng-container>
 
           <!-- Progress Column -->
-          <ng-container matColumnDef="progress">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Progress</th>
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
             4
-            <td mat-cell *matCellDef="let element">{{ element.progress }}%</td>
+            <td mat-cell *matCellDef="let element">{{ element.phone }}</td>
           </ng-container>
 
           <!-- Name Column -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
           </ng-container>
 
           <!-- Color Column -->
-          <ng-container matColumnDef="color">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Color</th>
-            <td
-              mat-cell
-              *matCellDef="let element"
-              [style.color]="element.color"
-            >
-              {{ element.color }}
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let element" [style.color]="element.name">
+              {{ element.name }}
             </td>
           </ng-container>
 
@@ -89,30 +85,9 @@
               >
                 <div class="card-body">
                   <div class="row align-items-center">
-                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                      <button type="button" class="btn btn-block btn-warning">
-                        Accept
-                      </button>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                      <button type="button" class="btn btn-block btn-primary">
-                        Dispatch
-                      </button>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                      <button type="button" class="btn btn-block btn-success">
-                        Delivered
-                      </button>
-                    </div>
-
-                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
-                      <button type="button" class="btn btn-block btn-danger">
-                        Reject
-                      </button>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-2 col-xl mb-3 mb-xl-0">
+                    <div class="col-6 col-sm-4 col-md-2 mb-3 mb-xl-0">
                       <button type="button" class="btn btn-block btn-dark">
-                        Remove
+                        Delete
                       </button>
                     </div>
                   </div>

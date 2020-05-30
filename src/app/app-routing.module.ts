@@ -11,6 +11,7 @@ import { ProductListComponent } from './components/main-outlet/pruduct/product-l
 import { CatogoriesComponent } from './components/main-outlet/catogories/catogories.component';
 import { AddProductComponent } from './components/main-outlet/pruduct/add-product/add-product.component';
 import { SignUpComponent } from './components/auth-pages/sign-up/sign-up.component';
+import { UserComponent } from './components/main-outlet/users/user.component';
 
 const routes: Routes = [
   {
@@ -21,17 +22,17 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    canActivate:[ CanActivateViaAuthGuardForLogin ]
+    canActivate: [CanActivateViaAuthGuardForLogin],
   },
   {
     path: 'register',
     component: SignUpComponent,
-    canActivate:[ CanActivateViaAuthGuardForLogin ]
+    canActivate: [CanActivateViaAuthGuardForLogin],
   },
   {
     path: '',
     component: MainOutletComponent,
-    canActivate: [ CanActivateViaAuthGuardForDashboard ],
+    canActivate: [CanActivateViaAuthGuardForDashboard],
     children: [
       {
         path: 'dashboard',
@@ -43,27 +44,31 @@ const routes: Routes = [
       },
       {
         path: 'categories',
-        component: CatogoriesComponent
+        component: CatogoriesComponent,
       },
       {
         path: 'product-list',
-        component: ProductListComponent
+        component: ProductListComponent,
       },
       {
         path: 'add-product',
-        component: AddProductComponent
-      }
-    ]
+        component: AddProductComponent,
+      },
+      {
+        path: 'users',
+        component: UserComponent,
+      },
+    ],
   },
-  { 
+  {
     path: '**',
     redirectTo: 'dashboard',
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

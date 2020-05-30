@@ -11,7 +11,7 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true
+  suppressScrollX: true,
 };
 
 import {
@@ -31,11 +31,9 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 
-
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-
 
 import { CanActivateViaAuthGuardForDashboard } from './services/auth-gurad/auth-guard-dashboard.service';
 import { CanActivateViaAuthGuardForLogin } from './services/auth-gurad/auth-guard-login.service';
@@ -49,6 +47,7 @@ import { LoginComponent } from './components/auth-pages/login/login.component';
 import { MainOutletComponent } from './components/main-outlet/main-outlet.component';
 import { DashboardComponent } from './components/main-outlet/dashboard/dashboard.component';
 import { OrderListComponent } from './components/main-outlet/order-list/order-list.component';
+import { UserComponent } from './components/main-outlet/users/user.component';
 import { ProductListComponent } from './components/main-outlet/pruduct/product-list/product-list.component';
 import { CatogoriesComponent } from './components/main-outlet/catogories/catogories.component';
 import { AddProductComponent } from './components/main-outlet/pruduct/add-product/add-product.component';
@@ -69,7 +68,8 @@ import { LoginService } from './services/login.service';
     ProductListComponent,
     CatogoriesComponent,
     AddProductComponent,
-    SignUpComponent
+    SignUpComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,14 +93,14 @@ import { LoginService } from './services/login.service';
     ModalModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
   ],
   providers: [
     CanActivateViaAuthGuardForDashboard,
     CanActivateViaAuthGuardForLogin,
     LoginService,
-    CategoryService
+    CategoryService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

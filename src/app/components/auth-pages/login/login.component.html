@@ -9,42 +9,64 @@
                 <form [formGroup]="loginForm" (ngSubmit)="onLoginClick()">
                   <h1>Login</h1>
                   <p class="text-muted">Sign In to your account</p>
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"
-                        ><i class="icon-user"></i
-                      ></span>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="icon-user"></i
+                        ></span>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Username*"
+                        autocomplete="credential"
+                        formControlName="credential"
+                        required
+                      />
                     </div>
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Username*"
-                      autocomplete="credential"
-                      formControlName="credential"
-                      required
-                    />
-                  </div>
-                  <div *ngIf="(f.credential.invalid && f.credential.touched) || f.credential.dirty">
-                    <small *ngIf="f.credential.errors?.required" class="text-danger">Username is required</small>
-                  </div>
-                  <div class="input-group mb-4">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"
-                        ><i class="icon-lock"></i
-                      ></span>
+                    <div
+                      *ngIf="
+                        (f.credential.invalid && f.credential.touched) ||
+                        f.credential.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.credential.errors?.required"
+                        class="text-danger"
+                        >Username is required</small
+                      >
                     </div>
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="password"
-                      placeholder="Password*"
-                      autocomplete="current-password"
-                      formControlName="password"
-                      required
-                    />
                   </div>
-                  <div *ngIf="(f.password.invalid && f.password.touched) || f.password.dirty">
-                    <small *ngIf="f.password.errors?.required" class="text-danger">Password is required</small>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="icon-lock"></i
+                        ></span>
+                      </div>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        placeholder="Password*"
+                        autocomplete="current-password"
+                        formControlName="password"
+                        required
+                      />
+                    </div>
+                    <div
+                      *ngIf="
+                        (f.password.invalid && f.password.touched) ||
+                        f.password.dirty
+                      "
+                    >
+                      <small
+                        *ngIf="f.password.errors?.required"
+                        class="text-danger"
+                        >Password is required</small
+                      >
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-6">

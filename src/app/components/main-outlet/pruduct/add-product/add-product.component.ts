@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CONSTANT } from '../../../../constants/constants';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ProductService } from './../../../../services/product.service';
 
 export function getAlertConfig(): AlertConfig {
   return Object.assign(new AlertConfig(), { type: 'success' });
@@ -23,7 +24,10 @@ export class AddProductComponent implements OnInit {
   public urls = new Array<string>();
   public productForm: FormGroup;
   public offerList = [];
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private productService: ProductService
+  ) {}
 
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({

@@ -4,7 +4,7 @@
     </div> -->
   <div class="card-body">
     <div class="row">
-      <div class="col-6" *ngIf="!isSubCategoryShow">
+      <div class="col-6">
         <!-- <alert type="info">
           <strong>Information!</strong> Click on button to add new category
         </alert> -->
@@ -19,7 +19,7 @@
           </button>
         </div>
       </div>
-      <div class="col-6" *ngIf="isSubCategoryShow">
+      <div class="col-6">
         <div class="form-group">
           <button
             type="button"
@@ -42,6 +42,7 @@
             class="form-control"
             placeholder="Type to search category"
             type="text"
+            (keyup)="applyFilter($event.target.value)"
           />
         </div>
       </div>
@@ -58,10 +59,7 @@
   </div>
 </div>
 
-<h2>{{ isSubCategoryShow ? "Sub " : "" }}Category list :</h2>
-<alert type="warning" *ngIf="subCategoryList?.subcategory.length === 0">
-  No Sub categories available.
-</alert>
+<h2>{{ isSubCategoryShow ? "Sub " : "" }}Category list {{ isSubCategoryShow ? "of " : "" }}{{ isSubCategoryShow ? subCategoryList.category_name : "" }}:</h2>
 <!-- <h2>Sub category list of Capsicum:</h2> -->
 <div class="row" *ngIf="!isSubCategoryShow">
   <!-- main category list -->
@@ -95,7 +93,7 @@
             <button
               type="button"
               class="btn btn-block btn-dark"
-              (click)="onDeleteCategoryClick(cat.category_id)"
+              (click)="onDeleteCategoryClick(cat)"
             >
               Remove
             </button>
@@ -137,7 +135,7 @@
             <button
               type="button"
               class="btn btn-block btn-dark"
-              (click)="onDeleteSubCategoryClick(cat.subcategory_id)"
+              (click)="onDeleteSubCategoryClick(cat)"
             >
               Remove
             </button>
@@ -173,25 +171,26 @@
       <form
         [formGroup]="addMainCategoryForm"
         (ngSubmit)="onAddEditMainCategoryClick()"
+        enctype="multipart/form-data"
       >
         <div class="modal-body">
           <div class="card">
             <div class="card-body">
               <div class="form-group">
-                <label for="company">{{ modelValues.name }}</label>
+                <label for="categoryName">{{ modelValues.name }}</label>
                 <input
                   type="text"
                   class="form-control"
-                  id="category_name"
+                  id="categoryName"
                   placeholder="Enter name here.."
                   formControlName="categoryName"
                 />
               </div>
               <div class="form-group">
-                <label for="vat">{{ modelValues.discription }}</label>
+                <label for="categoryDiscription">{{ modelValues.discription }}</label>
                 <textarea
-                  id="textarea-input"
-                  name="textarea-input"
+                  id="categoryDiscription"
+                  name="categoryDiscription"
                   rows="5"
                   class="form-control"
                   placeholder="Enter discription here.."
@@ -199,14 +198,14 @@
                 ></textarea>
               </div>
               <div class="form-group row">
-                <label class="col-md-3 col-form-label" for="file-input"
+                <label class="col-md-3 col-form-label" for="categoryImage"
                   >File input</label
                 >
                 <div class="col-md-9">
                   <input
                     type="file"
-                    id="file-input"
-                    name="file-input"
+                    id="file"
+                    name="categoryImage"
                     formControlName="categoryImage"
                     (change)="onFileChange($event)"
                   />
@@ -265,6 +264,7 @@
       <form
         [formGroup]="addSubCategoryForm"
         (ngSubmit)="onAddEditSubCategoryClick()"
+        enctype="multipart/form-data" 
       >
         <div class="modal-body">
           <!-- <p>One fine body&hellip;</p> -->

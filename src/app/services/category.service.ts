@@ -25,8 +25,7 @@ export class CategoryService {
     return this.http
       .post<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.SAVE_MAIN_CATEGORY}`,
-        requestPayload,
-        httpOptions
+        requestPayload
       )
       .pipe(catchError(this.handleError));
   }
@@ -36,7 +35,6 @@ export class CategoryService {
       .post<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.UPDATE_CATEGORY}`,
         requestPayload,
-        httpOptions
       )
       .pipe(catchError(this.handleError));
   }
@@ -46,7 +44,6 @@ export class CategoryService {
       .post<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.SAVE_SUB_CATEGORY}`,
         requestPayload,
-        httpOptions
       )
       .pipe(catchError(this.handleError));
   }
@@ -56,7 +53,6 @@ export class CategoryService {
       .post<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.UPDATE_SUB_CATEGORY}`,
         requestPayload,
-        httpOptions
       )
       .pipe(catchError(this.handleError));
   }

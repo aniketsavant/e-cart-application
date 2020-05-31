@@ -55,7 +55,7 @@ export class CatogoriesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.ngxLoader.start();
+    // this.ngxLoader.start();
     this.addMainCategoryForm = this.formBuilder.group({
       categoryId: [''],
       categoryName: ['', Validators.required],

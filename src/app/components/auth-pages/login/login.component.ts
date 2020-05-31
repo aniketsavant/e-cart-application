@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      credential: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
@@ -35,20 +35,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public onLoginClick(): void {
-    // this.loginSubscription = this.loginService
-    //   .loginCall(this.loginForm.value)
-    //   .subscribe((res: UserData) => {
-    //     if (res) {
-    //       this.toastr.success('You can proceed now..', 'Login Successfull..!!');
+    this.loginSubscription = this.loginService
+      .loginCall(this.loginForm.value)
+      .subscribe((res: any) => {
+        if (res.status !=='error') {
+          this.toastr.success('You can proceed now..', 'Login Successfull..!!');
           localStorage.setItem('isLoggedIn', 'true');
           this.router.navigateByUrl('/dashboard');
-    //     } else {
-    //     }
-    //   }),
-    //   (err) => {
-    //     this.toastr.error('Somthing wrong', 'Oops.!!');
-    //     console.log('Error', err);
-    //   };
+        } else {
+          this.toastr.error(res.message,'Oops.!!')
+        }
+      }),
+      (err) => {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+        console.log('Error', err);
+      };
   }
 
   ngOnDestroy() {

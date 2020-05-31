@@ -25,11 +25,11 @@ export class SignUpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group(
       {
-        fullName: [
+        full_name: [
           '',
           [Validators.required, Validators.pattern('^[A-Za-z]+$')],
         ],
-        phoneNumber: [
+        phone: [
           '',
           [Validators.required, Validators.pattern('^[0-9]+$')],
         ],
@@ -41,10 +41,13 @@ export class SignUpComponent implements OnInit, OnDestroy {
           ],
         ],
         password: ['', Validators.required],
-        repeatPassword: ['', Validators.required],
-        fullAddress: ['', Validators.required],
+        re_password: ['', Validators.required],
+        full_address: ['', Validators.required],
         city: ['', Validators.required],
+        state:[''],
+        country:[''],
         landmark: [''],
+        role:['ADMIN']
       },
       {
         validator: this.checkRepeatPasword,
@@ -58,7 +61,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
   public onRegisterClick(): void {
     // alert(this.loginForm.controls['userName'].value);
-    const tempPayload = this.getLoginPayload();
+    const tempPayload = this.registerForm.value;
     (this.registartionSubscription = this.loginService
       .registrationCall(tempPayload)
       .subscribe((res) => {
@@ -66,6 +69,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
           this.toastr.success('Proceed with login.', 'Account Registered..!!');
           this.router.navigateByUrl('/login');
         } else {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
         }
       })),
       (err) => {
@@ -74,29 +78,10 @@ export class SignUpComponent implements OnInit, OnDestroy {
       };
   }
 
-  public getLoginPayload(): UserData {
-    return {
-      fName: this.registerForm.controls['fullName'].value,
-      consumerCode: 'ECART123',
-      mobile: this.registerForm.controls['phoneNumber'].value,
-      email: this.registerForm.controls['email'].value,
-      password: this.registerForm.controls['password'].value,
-      userType: 'CUSTOMER',
-      addresses: [
-        {
-          fullAddress: this.registerForm.controls['fullAddress'].value,
-          city: this.registerForm.controls['city'].value,
-          landmark: this.registerForm.controls['landmark'].value,
-          latitude: '',
-          longitude: '',
-        },
-      ],
-    };
-  }
-
+  
   private checkRepeatPasword(group: FormGroup) {
     let pass = group.get('password').value;
-    let confirmPass = group.get('repeatPassword').value;
+    let confirmPass = group.get('re_password').value;
     return pass === confirmPass ? null : { notSame: true };
   }
 

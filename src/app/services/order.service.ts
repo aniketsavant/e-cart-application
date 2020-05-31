@@ -3,38 +3,23 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { LOGIN_CONSTANTS, MAIN_URL_CONSTANTS } from '../constants/apiUrl';
+import { MAIN_URL_CONSTANTS } from '../constants/apiUrl';
 import { httpOptions } from '../constants/httpHeaders';
-
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class OrderService {
 
   constructor(private http: HttpClient) { }
 
-  public loginCall (requestPayload: any): Observable<any> {
-    return this.http.post<any>(`${environment.BASE_URL}${LOGIN_CONSTANTS.LOGIN_URL}`, requestPayload, httpOptions)
+
+  public getAllOrder (): Observable<any> {
+    return this.http.post<any>(`${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_ALL_ORDER_LIST}`, httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
-
-  public registrationCall (requestPayload: any): Observable<any> {
-    return this.http.post<any>(`${environment.BASE_URL}${LOGIN_CONSTANTS.REGISTRATION_URL}`, requestPayload, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  public getUserList (): Observable<any> {
-    return this.http.post<any>(`${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_ALL_USER_LIST}`, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

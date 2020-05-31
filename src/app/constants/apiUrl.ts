@@ -20,4 +20,8 @@ export const MAIN_URL_CONSTANTS = {
   SAVE_PRODUCT: 'insertproduct.php',
   UPDATE_PRODUCT: 'editproduct.php',
   DELETE_PRODUCT: 'deleteproduct.php',
+
+  GET_ALL_ORDER_LIST:'allOrder.php',
+
+  GET_ALL_USER_LIST:'getAlluser.php'
 };

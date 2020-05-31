@@ -11,6 +11,7 @@ import {
 } from '@angular/animations';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import { UsersService } from './../../../services/users.service';
+import { LoginService } from '../../../services/login.service';
 
 const tableDataC: any = [
   {
@@ -121,13 +122,27 @@ export class UserComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private loginService: LoginService
+  ) {}
 
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.getUserList();
   }
 
+  private getUserList(): void {
+    this.loginService.getUserList().subscribe((res) => {
+      if (res.length > 0) {
+        // this.dataSource = new MatTableDataSource(res);
+      } else {
+        alert('no data found');
+      }
+    });
+  }
+  
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

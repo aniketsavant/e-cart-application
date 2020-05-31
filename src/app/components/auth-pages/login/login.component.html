@@ -20,19 +20,19 @@
                         type="text"
                         class="form-control"
                         placeholder="Username*"
-                        autocomplete="credential"
-                        formControlName="credential"
+                        autocomplete="email"
+                        formControlName="email"
                         required
                       />
                     </div>
                     <div
                       *ngIf="
-                        (f.credential.invalid && f.credential.touched) ||
-                        f.credential.dirty
+                        (f.email.invalid && f.email.touched) ||
+                        f.email.dirty
                       "
                     >
                       <small
-                        *ngIf="f.credential.errors?.required"
+                        *ngIf="f.email.errors?.required"
                         class="text-danger"
                         >Username is required</small
                       >

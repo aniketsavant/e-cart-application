@@ -41,6 +41,7 @@ export class AddProductComponent implements OnInit {
       productSubCategory: ['', Validators.required],
       productName: ['', Validators.required],
       productQuantity: ['', Validators.required],
+      productDescription: [''],
       productUnit: ['', Validators.required],
       offerName: [''],
       offerProductQuantity: ['', Validators.required],
@@ -84,8 +85,18 @@ export class AddProductComponent implements OnInit {
   public onSaveChangesClick(): void {
     if (this.isEdit) {
       this.closeForm.emit(true);
+    } else {
+      console.log(this.createAddProductPayload());
+      // this.productService.addProductCall().subscribe((res) => {
+      //   if (res.status === 'Ok') {
+      //   } else {
+      //     this.toastr.error('Somthing wrong', 'Oops.!!');
+      //   }
+      // }),
+      //   (err) => {
+      //     this.toastr.error('Somthing wrong', 'Oops.!!');
+      //   };
     }
-    console.log(this.productForm.controls.value);
   }
 
   public onImagechange(event): void {
@@ -114,7 +125,29 @@ export class AddProductComponent implements OnInit {
       this.productForm.controls['productPrice'].valid &&
       this.productForm.controls['offerProductUnit'].valid
     ) {
-      this.offerList.push(this.productForm.value);
+      let objOffer = {
+        offer_name: this.productForm.get('offerName').value,
+        item_quantity: this.productForm.get('offerProductQuantity').value,
+        item_unit: this.productForm.get('offerProductUnit').value,
+        // productPrice: this.productForm.get('productPrice').value,
+        // discountRate: this.productForm.get('discountRate').value,
+        // discountRateUnit: this.productForm.get('discountRateUnit').value,
+        item_discount_price: this.productForm.get('discountPrice').value,
+        item_discount_percent: '',
+        item_discount_rupee: '',
+      };
+      if (this.productForm.get('discountRateUnit').value === 'Percentage') {
+        objOffer.item_discount_percent = this.productForm.get(
+          'discountRate'
+        ).value;
+        objOffer.item_discount_rupee = '';
+      } else {
+        objOffer.item_discount_percent = '';
+        objOffer.item_discount_rupee = this.productForm.get(
+          'discountRate'
+        ).value;
+      }
+      this.offerList.push(objOffer);
     }
     [
       'offerName',
@@ -141,5 +174,16 @@ export class AddProductComponent implements OnInit {
 
   public onCategoryChange(arrSubCat) {
     this.allSubCategoryList = arrSubCat;
+  }
+
+  public createAddProductPayload() {
+    let params = {
+      product_name: this.productForm.get('productName').value,
+      subcategory_id: this.productForm.get('productSubCategory').value,
+      product_description: this.productForm.get('productDescription').value,
+      product_total_quantity: this.productForm.get('productQuantity').value,
+      product_total_quantity_unit: this.productForm.get('productUnit').value,
+      productSales: this.offerList,
+    };
   }
 }

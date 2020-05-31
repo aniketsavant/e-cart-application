@@ -12,7 +12,7 @@ import { httpOptions } from '../constants/httpHeaders';
 export class ProductService {
   constructor(private http: HttpClient) {}
 
-  public addProduct(requestPayload: any): Observable<any> {
+  public addProductCall(requestPayload: any): Observable<any> {
     return this.http
       .post<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.SAVE_MAIN_CATEGORY}`,

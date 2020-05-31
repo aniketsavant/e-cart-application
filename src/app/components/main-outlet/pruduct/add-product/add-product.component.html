@@ -167,13 +167,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="textarea-input">Product Discription</label>
+            <label for="textarea-input">Product Description</label>
             <textarea
               id="textarea-input"
               name="textarea-input"
               rows="3"
               class="form-control"
               placeholder="Discribe more about this product.."
+              formControlName="productDescription"
             ></textarea>
           </div>
           <div class="form-group row">
@@ -340,7 +341,7 @@
                     >
                       <option value="">Select Unit</option>
                       <option value="Rupee">Price (Rupee)</option>
-                      <option value="%">Percentage (%)</option>
+                      <option value="Percentage">Percentage (%)</option>
                     </select>
                   </div>
                 </div>

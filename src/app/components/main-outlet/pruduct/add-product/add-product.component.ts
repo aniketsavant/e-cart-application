@@ -28,6 +28,8 @@ export class AddProductComponent implements OnInit {
   public offerList = [];
   allCategoryList: any;
   allSubCategoryList: any;
+  productQtyUnit = CONSTANT.FOR_PRODUCT_UNIT;
+  discountRateUnit = CONSTANT.FOR_DISCOUNT_UNIT;
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
@@ -49,7 +51,7 @@ export class AddProductComponent implements OnInit {
       productPrice: ['', Validators.required],
       discountRate: [''],
       discountRateUnit: [''],
-      discountPrice: [''],
+      discountPrice: [{ value: '', disabled: true }],
       image: ['', Validators.required],
       offerList: [''],
     });
@@ -86,16 +88,17 @@ export class AddProductComponent implements OnInit {
     if (this.isEdit) {
       this.closeForm.emit(true);
     } else {
-      console.log(this.createAddProductPayload());
-      // this.productService.addProductCall().subscribe((res) => {
-      //   if (res.status === 'Ok') {
-      //   } else {
-      //     this.toastr.error('Somthing wrong', 'Oops.!!');
-      //   }
-      // }),
-      //   (err) => {
-      //     this.toastr.error('Somthing wrong', 'Oops.!!');
-      //   };
+      this.productService
+        .addProductCall(this.createAddProductPayload())
+        .subscribe((res) => {
+          if (res.status === 'Ok') {
+          } else {
+            this.toastr.error('Somthing wrong', 'Oops.!!');
+          }
+        }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+        };
     }
   }
 
@@ -133,6 +136,7 @@ export class AddProductComponent implements OnInit {
         // discountRate: this.productForm.get('discountRate').value,
         // discountRateUnit: this.productForm.get('discountRateUnit').value,
         item_discount_price: this.productForm.get('discountPrice').value,
+        item_discount_unit: this.productForm.get('discountRateUnit').value,
         item_discount_percent: '',
         item_discount_rupee: '',
       };
@@ -172,8 +176,8 @@ export class AddProductComponent implements OnInit {
     this.productForm.controls['offerList'].patchValue(this.offerList);
   }
 
-  public onCategoryChange(arrSubCat) {
-    this.allSubCategoryList = arrSubCat;
+  onCategoryChange(idex) {
+    this.allSubCategoryList = this.allCategoryList[idex]?.subcategory;
   }
 
   public createAddProductPayload() {
@@ -185,5 +189,6 @@ export class AddProductComponent implements OnInit {
       product_total_quantity_unit: this.productForm.get('productUnit').value,
       productSales: this.offerList,
     };
+    return params;
   }
 }

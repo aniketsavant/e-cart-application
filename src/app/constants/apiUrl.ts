@@ -17,7 +17,7 @@ export const MAIN_URL_CONSTANTS = {
   GET_USERS_LIST: 'users.php',
 
   GET_PRODUCT_LIST: '',
-  SAVE_PRODUCT: '',
-  UPDATE_PRODUCT: '',
-  DELETE_PRODUCT: '',
+  SAVE_PRODUCT: 'insertproduct.php',
+  UPDATE_PRODUCT: 'editproduct.php',
+  DELETE_PRODUCT: 'deleteproduct.php',
 };

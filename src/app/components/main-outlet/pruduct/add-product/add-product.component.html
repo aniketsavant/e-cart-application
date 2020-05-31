@@ -20,12 +20,12 @@
                   name="City"
                   class="form-control"
                   formControlName="productCategory"
+                  (change)="onCategoryChange($event.target.value)"
                 >
                   <option value="">Select Category</option>
                   <option
-                    *ngFor="let category of allCategoryList"
-                    [value]="category.category_id"
-                    (onChange)="onCategoryChange(category.subcategory)"
+                    *ngFor="let category of allCategoryList; let i = index"
+                    [value]="i"
                     >{{ category.category_name }}</option
                   >
                 </select>
@@ -266,9 +266,11 @@
                       formControlName="offerProductUnit"
                     >
                       <option value="">Select Unit</option>
-                      <option value="Kg">Kilogram</option>
-                      <option value="Packat">Packat</option>
-                      <option value="Ltr">Liter</option>
+                      <option
+                        [value]="item.value"
+                        *ngFor="let item of productQtyUnit"
+                        >{{ item.label }}</option
+                      >
                     </select>
                     <div
                       *ngIf="
@@ -340,8 +342,11 @@
                       formControlName="discountRateUnit"
                     >
                       <option value="">Select Unit</option>
-                      <option value="Rupee">Price (Rupee)</option>
-                      <option value="Percentage">Percentage (%)</option>
+                      <option
+                        [value]="item.value"
+                        *ngFor="let item of discountRateUnit"
+                        >{{ item.label }}</option
+                      >
                     </select>
                   </div>
                 </div>
@@ -381,10 +386,9 @@
               <alert type="info">
                 <div class="row">
                   <div class="col-10">
-                    {{ item.discountRate }}{{ item.discountRateUnit }} Discount
-                    on {{ item.offerProductQuantity }}/{{
-                      item.offerProductUnit
-                    }}
+                    {{ item.item_discount_percent || item.item_discount_rupee }}
+                    {{ item.item_discount_unit }} Discount on
+                    {{ item.item_quantity }}/{{ item.item_unit }}
                   </div>
                   <div class="col-2">
                     <a (click)="onRemoveOffer(i)">

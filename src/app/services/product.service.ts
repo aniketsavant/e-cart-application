@@ -15,7 +15,7 @@ export class ProductService {
   public addProductCall(requestPayload: any): Observable<any> {
     return this.http
       .post<any>(
-        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.SAVE_MAIN_CATEGORY}`,
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.SAVE_PRODUCT}`,
         requestPayload,
         httpOptions
       )

@@ -30,6 +30,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -91,6 +92,7 @@ import { LoginService } from './services/login.service';
     AlertModule,
     MatSortModule,
     ModalModule,
+    NgxUiLoaderModule,
     ReactiveFormsModule,
     HttpClientModule,
     ToastrModule.forRoot(),

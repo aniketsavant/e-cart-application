@@ -3,12 +3,15 @@ import { AlertConfig } from 'ngx-bootstrap/alert';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgxUiLoaderService } from 'ngx-ui-loader'; // Import NgxUiLoaderService
+
 import { CategoryService } from '../../../services/category.service';
 import { CONSTANT } from '../../../constants/constants';
 import {
   ModelValue,
   GetCategoryList,
   Category,
+  SubCategory,
 } from '../../../interfaces/iCategory';
 
 export function getAlertConfig(): AlertConfig {
@@ -39,18 +42,20 @@ export class CatogoriesComponent implements OnInit {
   public addSubCategoryForm: FormGroup;
   public allCategoryList: Category[] = [];
   public isSubCategoryShow = false;
-  arrSubCategoryList: import('f:/sanket proj/e-cart-application/src/app/interfaces/iCategory').SubCategory[];
-  editMainCategory: any;
-  isEditForm = false;
-  subCategoryList: any;
+  public arrSubCategoryList: SubCategory[];
+  public editMainCategory: any;
+  public isEditForm = false;
+  public subCategoryList: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private ngxLoader: NgxUiLoaderService
   ) {}
 
   ngOnInit(): void {
+    this.ngxLoader.start();
     this.addMainCategoryForm = this.formBuilder.group({
       categoryId: [''],
       categoryName: ['', Validators.required],
@@ -75,13 +80,16 @@ export class CatogoriesComponent implements OnInit {
       .subscribe((res: GetCategoryList) => {
         if (res.status === 'Ok') {
           this.allCategoryList = res.data;
+          this.ngxLoader.stop();
         } else {
           this.toastr.error('Somthing wrong', 'Oops.!!');
+          this.ngxLoader.stop();
         }
       }),
       (err) => {
         this.toastr.error('Somthing wrong', 'Oops.!!');
         console.log('Error', err);
+        this.ngxLoader.stop();
       };
   }
 
@@ -151,51 +159,87 @@ export class CatogoriesComponent implements OnInit {
   }
 
   public onAddEditMainCategoryClick(): void {
+    // this.ngxLoader.start();
     if (this.isEditForm) {
       this.categoryService
         .editCategoryCall(this.createFormData())
         .subscribe((res) => {
-          console.log(res);
-          this.onMainCategoryCloseClick();
+          if (res.status !== 'error') {
+            this.toastr.success('Category edited successfully.', 'Done.!!');
+            this.getCategoryList();
+            this.onMainCategoryCloseClick();
+            // this.ngxLoader.stop();
+          } else {
+            this.toastr.error(res.message, 'Oops.!!');
+            // this.ngxLoader.stop();
+          }
         }),
         (err) => {
           this.toastr.error('Somthing wrong', 'Oops.!!');
           console.log('Error', err);
+          // this.ngxLoader.stop();
         };
     } else {
       this.categoryService
         .createCategoryCall(this.createFormData())
         .subscribe((res) => {
-          console.log(res);
-          this.onMainCategoryCloseClick();
+          if (res.status !== 'error') {
+            this.toastr.success('Category added successfully.', 'Done.!!');
+            this.getCategoryList();
+            this.onMainCategoryCloseClick();
+            this.ngxLoader.stop();
+          } else {
+            this.toastr.error(res.message, 'Oops.!!');
+            this.ngxLoader.stop();
+          }
         }),
         (err) => {
           this.toastr.error('Somthing wrong', 'Oops.!!');
           console.log('Error', err);
+          this.ngxLoader.stop();
         };
     }
   }
 
   public onAddEditSubCategoryClick(): void {
+    this.ngxLoader.start();
     if (this.isEditForm) {
       this.categoryService
         .editSubCategoryCall(this.createFormData())
         .subscribe((res) => {
-          this.onSubCategoryCloseClick();
+          if (res.status !== 'error') {
+            this.toastr.success('Sub category edited successfully.', 'Done.!!');
+            this.getCategoryList();
+            this.onSubCategoryCloseClick();
+            this.ngxLoader.stop();
+          } else {
+            this.toastr.error(res.message, 'Oops.!!');
+            this.ngxLoader.stop();
+          }
         }),
         (err) => {
           this.toastr.error('Somthing wrong', 'Oops.!!');
           console.log('Error', err);
+          this.ngxLoader.stop();
         };
     } else {
       this.categoryService
         .createSubCaegoryCall(this.createFormData())
         .subscribe((res) => {
-          this.onSubCategoryCloseClick();
+          if (res.status !== 'error') {
+            this.toastr.success('Sub category added successfully.', 'Done.!!');
+            this.getCategoryList();
+            this.onSubCategoryCloseClick();
+            this.ngxLoader.stop();
+          } else {
+            this.toastr.error(res.message, 'Oops.!!');
+            this.ngxLoader.stop();
+          }
         }),
         (err) => {
           this.toastr.error('Somthing wrong', 'Oops.!!');
           console.log('Error', err);
+          this.ngxLoader.stop();
         };
     }
   }
@@ -215,7 +259,7 @@ export class CatogoriesComponent implements OnInit {
     } else {
       if (event.target.files.length > 0) {
         const file = event.target.files[0];
-        this.addMainCategoryForm.patchValue({
+        this.addSubCategoryForm.patchValue({
           subCategoryImageFileSource: file,
         });
       }
@@ -238,7 +282,7 @@ export class CatogoriesComponent implements OnInit {
 
       formData.append(
         'files',
-        this.addMainCategoryForm.controls['categoryImage'].value
+        this.addMainCategoryForm.controls['categoryImageFileSource'].value
       );
       formData.append(
         'category_name',
@@ -276,35 +320,71 @@ export class CatogoriesComponent implements OnInit {
   }
 
   public onMainCategoryClick(idx) {
-    this.subCategoryList = this.allCategoryList[idx];
-    this.isSubCategoryShow = true;
+    if (this.allCategoryList[idx]?.subcategory.length === 0) {
+      this.toastr.error(
+        'No sub category available for this category',
+        'NO DATA..!!'
+      );
+    } else {
+      this.subCategoryList = this.allCategoryList[idx];
+      this.isSubCategoryShow = true;
+    }
   }
 
-  public onDeleteCategoryClick(categoryId): void {
-    let params = { category_id: categoryId };
-    console.log(params);
-    this.categoryService.deleteCategoryCall(params).subscribe((res) => {
-      this.getCategoryList();
-    }),
-      (err) => {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
-        console.log('Error', err);
-      };
+  public onDeleteCategoryClick(cat): void {
+    if (confirm('Are you sure to delete ' + cat.category_name)) {
+      // this.ngxLoader.start();
+      let params = { category_id: cat.category_id };
+      console.log(params);
+      this.categoryService.deleteCategoryCall(params).subscribe((res) => {
+        if (res.status == 'Ok') {
+          this.allCategoryList = this.allCategoryList.filter(
+            ({ category_id }) => category_id !== cat.category_id
+          );
+          // this.ngxLoader.stop();
+        } else {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          // this.ngxLoader.stop();
+        }
+      }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          console.log('Error', err);
+          // this.ngxLoader.stop();
+        };
+    }
   }
 
-  public onDeleteSubCategoryClick(categoryId): void {
-    let params = { category_id: categoryId };
-    console.log(params);
-    this.categoryService.deleteSubCategoryCall(params).subscribe((res) => {
-      this.getCategoryList();
-    }),
-      (err) => {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
-        console.log('Error', err);
-      };
+  public onDeleteSubCategoryClick(subCat): void {
+    if (confirm('Are you sure to delete ' + subCat.subcategory_name)) {
+      // this.ngxLoader.start();
+      let params = { subcategory_id: subCat?.subcategory_id };
+      console.log(params);
+      this.categoryService.deleteSubCategoryCall(params).subscribe((res) => {
+        if (res.status == 'Ok') {
+          this.subCategoryList.subcategory = this.subCategoryList.subcategory.filter(
+            ({ subcategory_id }) => subcategory_id !== subCat?.subcategory_id
+          );
+          // this.ngxLoader.stop();
+        } else {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          // this.ngxLoader.stop();
+        }
+      }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          console.log('Error', err);
+          // this.ngxLoader.stop();
+        };
+    }
   }
 
   public backToCategoryList() {
     this.isSubCategoryShow = false;
+  }
+
+  public applyFilter(filterValue: string): void {
+    // const tempArrayForAllCategory = this.allCategoryList;
+    // this.allCategoryList = this.allCategoryList.filter(ele=>ele.category_name.includes(filterValue));
   }
 }

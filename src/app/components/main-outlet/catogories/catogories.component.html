@@ -4,7 +4,7 @@
     </div> -->
   <div class="card-body">
     <div class="row">
-      <div class="col-6">
+      <div class="col-6" *ngIf="!isSubCategoryShow">
         <!-- <alert type="info">
           <strong>Information!</strong> Click on button to add new category
         </alert> -->
@@ -19,7 +19,7 @@
           </button>
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-6" *ngIf="isSubCategoryShow">
         <div class="form-group">
           <button
             type="button"
@@ -45,31 +45,40 @@
           />
         </div>
       </div>
-      <div class="col-2">
+      <div class="col-2" *ngIf="isSubCategoryShow">
         <button
-        type="button"
-        class="btn btn-block btn-warning"
-      >
-       Goto Category List
-      </button>
+          type="button"
+          class="btn btn-block btn-warning"
+          (click)="backToCategoryList()"
+        >
+          Goto Category List
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<h2>Category list :</h2>
+<h2>{{ isSubCategoryShow ? "Sub " : "" }}Category list :</h2>
+<alert type="warning" *ngIf="subCategoryList?.subcategory.length === 0">
+  No Sub categories available.
+</alert>
 <!-- <h2>Sub category list of Capsicum:</h2> -->
-
-<div class="row">
-  <div class="col-sm-6 col-md-4">
+<div class="row" *ngIf="!isSubCategoryShow">
+  <!-- main category list -->
+  <div
+    class="col-sm-6 col-md-4"
+    *ngFor="let cat of allCategoryList; let i = index"
+  >
     <div class="card card-accent-primary">
-      <div class="card-header">
-        <strong>Capcicum (शिमला मिरची)</strong>
-      </div>
+      <a (click)="onMainCategoryClick(i)" class="categories">
+        <div class="card-header">
+          <strong>{{ cat.category_name }}</strong>
+        </div>
+      </a>
       <div class="card-body">
         <div class="row">
           <div class="col-12">
-            <img src="assets/img/beet.jpg" alt="" class="productImage" />
+            <img [src]="cat.category_files" class="productImage" />
           </div>
         </div>
         <div class="row align-items-center buttonClass">
@@ -77,133 +86,61 @@
             <button
               type="button"
               class="btn btn-block btn-primary"
-              (click)="onEditCategoryClick()"
+              (click)="onEditCategoryClick(cat)"
             >
               Edit
             </button>
           </div>
           <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
+            <button
+              type="button"
+              class="btn btn-block btn-dark"
+              (click)="onDeleteCategoryClick(cat.category_id)"
+            >
+              Remove
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-sm-6 col-md-4">
+</div>
+<!-- sub category list -->
+<div class="row" *ngIf="isSubCategoryShow">
+  <div
+    class="col-sm-6 col-md-4"
+    *ngFor="let cat of subCategoryList.subcategory; let i = index"
+  >
     <div class="card card-accent-primary">
-      <div class="card-header">
-        <strong>Capcicum (शिमला मिरची)</strong>
-      </div>
+      <a (click)="onMainCategoryClick(i)" class="categories">
+        <div class="card-header">
+          <strong>{{ cat.subcategory_name }}</strong>
+        </div>
+      </a>
       <div class="card-body">
         <div class="row">
           <div class="col-12">
-            <img src="assets/img/maggi.jpg" alt="" class="productImage" />
+            <img [src]="cat.subcategory_files" class="productImage" />
           </div>
         </div>
         <div class="row align-items-center buttonClass">
           <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
+            <button
+              type="button"
+              class="btn btn-block btn-primary"
+              (click)="onEditSubCategoryClick(cat, subCategoryList.category_id)"
+            >
               Edit
             </button>
           </div>
           <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        <strong>Capcicum (शिमला मिरची)</strong>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-12">
-            <img src="assets/img/capsicum.jpg" alt="" class="productImage" />
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
+            <button
+              type="button"
+              class="btn btn-block btn-dark"
+              (click)="onDeleteSubCategoryClick(cat.subcategory_id)"
+            >
+              Remove
             </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        <strong>Capcicum (शिमला मिरची)</strong>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-12">
-            <img src="assets/img/beet.jpg" alt="" class="productImage" />
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
-            </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        <strong>Capcicum (शिमला मिरची)</strong>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-12">
-            <img src="assets/img/beet.jpg" alt="" class="productImage" />
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
-            </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        <strong>Capcicum (शिमला मिरची)</strong>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-12">
-            <img src="assets/img/beet.jpg" alt="" class="productImage" />
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
-            </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
           </div>
         </div>
       </div>
@@ -233,7 +170,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form [formGroup]="addMainCategoryForm" (ngSubmit)="onAddEditMainCategoryClick()">
+      <form
+        [formGroup]="addMainCategoryForm"
+        (ngSubmit)="onAddEditMainCategoryClick()"
+      >
         <div class="modal-body">
           <div class="card">
             <div class="card-body">
@@ -284,7 +224,11 @@
           >
             Close
           </button>
-          <button type="submit" [ngClass]="modelValues?.saveButtonClass" [disabled]="!addMainCategoryForm.valid">
+          <button
+            type="submit"
+            [ngClass]="modelValues?.saveButtonClass"
+            [disabled]="!addMainCategoryForm.valid"
+          >
             {{ modelValues?.saveButtonName }}
           </button>
         </div>
@@ -318,7 +262,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form [formGroup]="addSubCategoryForm" (ngSubmit)="onAddEditSubCategoryClick()">
+      <form
+        [formGroup]="addSubCategoryForm"
+        (ngSubmit)="onAddEditSubCategoryClick()"
+      >
         <div class="modal-body">
           <!-- <p>One fine body&hellip;</p> -->
           <div class="card">
@@ -331,9 +278,12 @@
                   class="form-control"
                   formControlName="selectedcategoryId"
                 >
-                  <option value="1">Vegitale</option>
-                  <option value="2">Fruits</option>
-                  <option value="3">Milk Product</option>
+                  <option value="">Select Category</option>
+                  <option
+                    [value]="cat.category_id"
+                    *ngFor="let cat of allCategoryList"
+                    >{{ cat.category_name }}</option
+                  >
                 </select>
               </div>
               <div class="form-group">
@@ -383,7 +333,11 @@
           >
             Close
           </button>
-          <button type="submit" [ngClass]="modelValues?.saveButtonClass" [disabled]="!addSubCategoryForm.valid">
+          <button
+            type="submit"
+            [ngClass]="modelValues?.saveButtonClass"
+            [disabled]="!addSubCategoryForm.valid"
+          >
             {{ modelValues?.saveButtonName }}
           </button>
         </div>

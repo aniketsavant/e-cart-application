@@ -12,24 +12,6 @@ import { httpOptions } from '../constants/httpHeaders';
 export class ProductService {
   constructor(private http: HttpClient) {}
 
-  public getProductCategoryList(): Observable<any> {
-    return this.http
-      .get<any>(
-        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_CATEGORY_LIST}`,
-        httpOptions
-      )
-      .pipe(catchError(this.handleError));
-  }
-
-  public getProductSubCategoryList(): Observable<any> {
-    return this.http
-      .get<any>(
-        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_CATEGORY_LIST}`,
-        httpOptions
-      )
-      .pipe(catchError(this.handleError));
-  }
-
   public addProduct(requestPayload: any): Observable<any> {
     return this.http
       .post<any>(

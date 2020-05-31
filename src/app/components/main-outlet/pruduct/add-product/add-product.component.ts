@@ -3,6 +3,8 @@ import { CONSTANT } from '../../../../constants/constants';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProductService } from './../../../../services/product.service';
+import { CategoryService } from './../../../../services/category.service';
+import { ToastrService } from 'ngx-toastr';
 
 export function getAlertConfig(): AlertConfig {
   return Object.assign(new AlertConfig(), { type: 'success' });
@@ -24,9 +26,13 @@ export class AddProductComponent implements OnInit {
   public urls = new Array<string>();
   public productForm: FormGroup;
   public offerList = [];
+  allCategoryList: any;
+  allSubCategoryList: any;
   constructor(
     private formBuilder: FormBuilder,
-    private productService: ProductService
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +56,21 @@ export class AddProductComponent implements OnInit {
     this.setProductValue = this.isEdit
       ? CONSTANT.FOR_PRODUCT_EDIT
       : CONSTANT.FOR_PRODUCT_SAVE;
+
+    this.getAllCategory();
+  }
+
+  getAllCategory() {
+    this.categoryService.getAllCategoryListCall().subscribe((res) => {
+      if (res.status === 'Ok') {
+        this.allCategoryList = res.data;
+      } else {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+      }
+    }),
+      (err) => {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+      };
   }
   get f() {
     return this.productForm.controls;
@@ -116,5 +137,9 @@ export class AddProductComponent implements OnInit {
   public onRemoveOffer(idx) {
     this.offerList.splice(idx, 1);
     this.productForm.controls['offerList'].patchValue(this.offerList);
+  }
+
+  public onCategoryChange(arrSubCat) {
+    this.allSubCategoryList = arrSubCat;
   }
 }

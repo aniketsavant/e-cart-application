@@ -5,7 +5,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from '../../../services/category.service';
 import { CONSTANT } from '../../../constants/constants';
-import { ModelValue, GetCategoryList, Category} from '../../../interfaces/iCategory';
+import {
+  ModelValue,
+  GetCategoryList,
+  Category,
+} from '../../../interfaces/iCategory';
 
 export function getAlertConfig(): AlertConfig {
   return Object.assign(new AlertConfig(), { type: 'success' });
@@ -34,6 +38,11 @@ export class CatogoriesComponent implements OnInit {
   public addMainCategoryForm: FormGroup;
   public addSubCategoryForm: FormGroup;
   public allCategoryList: Category[] = [];
+  public isSubCategoryShow = false;
+  arrSubCategoryList: import('f:/sanket proj/e-cart-application/src/app/interfaces/iCategory').SubCategory[];
+  editMainCategory: any;
+  isEditForm = false;
+  subCategoryList: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,12 +52,14 @@ export class CatogoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.addMainCategoryForm = this.formBuilder.group({
+      categoryId: [''],
       categoryName: ['', Validators.required],
       categoryDiscription: [''],
       categoryImage: ['', Validators.required],
       categoryImageFileSource: [''],
     });
     this.addSubCategoryForm = this.formBuilder.group({
+      subCategoryId: [''],
       selectedcategoryId: ['', Validators.required],
       subCategoryName: ['', Validators.required],
       subCategoryDiscription: [''],
@@ -59,15 +70,15 @@ export class CatogoriesComponent implements OnInit {
   }
 
   private getCategoryList(): void {
-    this.categoryService.getAllCategoryListCall().subscribe((res: GetCategoryList) => {
-      console.log(res);
-      if(res.status == 'Ok'){
-        this.allCategoryList = res.data;
-      } else {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
-      }
-      
-    }),
+    this.categoryService
+      .getAllCategoryListCall()
+      .subscribe((res: GetCategoryList) => {
+        if (res.status === 'Ok') {
+          this.allCategoryList = res.data;
+        } else {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+        }
+      }),
       (err) => {
         this.toastr.error('Somthing wrong', 'Oops.!!');
         console.log('Error', err);
@@ -85,9 +96,48 @@ export class CatogoriesComponent implements OnInit {
     this.modelForAddEditSubCategory.show();
   }
 
-  public onEditCategoryClick(): void {
+  public onEditCategoryClick(objCategory): void {
+    this.isEditForm = true;
     this.modelValues = CONSTANT.FOR_CATEGORY_EDIT;
+    this.addMainCategoryForm
+      .get('categoryId')
+      .patchValue(objCategory.category_id);
+    this.addMainCategoryForm
+      .get('categoryName')
+      .patchValue(objCategory.category_name);
+    this.addMainCategoryForm
+      .get('categoryDiscription')
+      .patchValue(objCategory.category_description);
+    this.addMainCategoryForm.controls['categoryName'].updateValueAndValidity();
+    this.addMainCategoryForm.controls[
+      'categoryDiscription'
+    ].updateValueAndValidity();
+
     this.modelForAddEditCategory.show();
+  }
+
+  public onEditSubCategoryClick(objCategory, categoryId): void {
+    console.log(objCategory, categoryId);
+    this.isEditForm = true;
+    this.modelValues = CONSTANT.FOR_SUB_CATEGORY_EDIT;
+    this.addSubCategoryForm.get('selectedcategoryId').patchValue(categoryId);
+    this.addSubCategoryForm
+      .get('subCategoryId')
+      .patchValue(objCategory.subcategory_id);
+    this.addSubCategoryForm
+      .get('subCategoryName')
+      .patchValue(objCategory.subcategory_name);
+    this.addSubCategoryForm
+      .get('subCategoryDiscription')
+      .patchValue(objCategory.subcategory_description);
+    this.addSubCategoryForm.controls[
+      'subCategoryName'
+    ].updateValueAndValidity();
+    this.addSubCategoryForm.controls[
+      'subCategoryDiscription'
+    ].updateValueAndValidity();
+
+    this.modelForAddEditSubCategory.show();
   }
 
   public onMainCategoryCloseClick(): void {
@@ -101,36 +151,53 @@ export class CatogoriesComponent implements OnInit {
   }
 
   public onAddEditMainCategoryClick(): void {
-    console.log(this.createFormData().get('files'));
-    const temp = {
-      category_name: 'asgdj',
-      description: "kashdkjhas",
-      files:"maasjd"
+    if (this.isEditForm) {
+      this.categoryService
+        .editCategoryCall(this.createFormData())
+        .subscribe((res) => {
+          console.log(res);
+          this.onMainCategoryCloseClick();
+        }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          console.log('Error', err);
+        };
+    } else {
+      this.categoryService
+        .createCategoryCall(this.createFormData())
+        .subscribe((res) => {
+          console.log(res);
+          this.onMainCategoryCloseClick();
+        }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          console.log('Error', err);
+        };
     }
-    this.categoryService
-      .createCategoryCall(this.createFormData())
-      .subscribe((res) => {
-        console.log(res);
-        this.onMainCategoryCloseClick();
-      }),
-      (err) => {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
-        console.log('Error', err);
-      };
   }
 
   public onAddEditSubCategoryClick(): void {
-    console.log(this.addSubCategoryForm.value);
-    this.categoryService
-      .createSubCaegoryCall(this.createFormData())
-      .subscribe((res) => {
-        console.log(res);
-        this.onSubCategoryCloseClick();
-      }),
-      (err) => {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
-        console.log('Error', err);
-      };
+    if (this.isEditForm) {
+      this.categoryService
+        .editSubCategoryCall(this.createFormData())
+        .subscribe((res) => {
+          this.onSubCategoryCloseClick();
+        }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          console.log('Error', err);
+        };
+    } else {
+      this.categoryService
+        .createSubCaegoryCall(this.createFormData())
+        .subscribe((res) => {
+          this.onSubCategoryCloseClick();
+        }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          console.log('Error', err);
+        };
+    }
   }
 
   onFileChange(event) {
@@ -162,6 +229,13 @@ export class CatogoriesComponent implements OnInit {
       this.addMainCategoryForm.controls['categoryImage'].value !== null &&
       this.addMainCategoryForm.controls['categoryImage'].value !== undefined
     ) {
+      if (this.isEditForm) {
+        formData.append(
+          'category_id',
+          this.addMainCategoryForm.controls['categoryId'].value
+        );
+      }
+
       formData.append(
         'files',
         this.addMainCategoryForm.controls['categoryImage'].value
@@ -177,21 +251,60 @@ export class CatogoriesComponent implements OnInit {
     } else {
       formData.append(
         'files',
-        this.addMainCategoryForm.controls['subCategoryImageFileSource'].value
+        this.addSubCategoryForm.controls['subCategoryImageFileSource'].value
       );
       formData.append(
         'subcategory_name',
-        this.addMainCategoryForm.controls['subCategoryName'].value
+        this.addSubCategoryForm.controls['subCategoryName'].value
       );
       formData.append(
         'description',
-        this.addMainCategoryForm.controls['subCategoryDiscription'].value
+        this.addSubCategoryForm.controls['subCategoryDiscription'].value
       );
       formData.append(
         'category_id',
-        this.addMainCategoryForm.controls['selectedcategoryId'].value
+        this.addSubCategoryForm.controls['selectedcategoryId'].value
       );
+      if (this.isEditForm) {
+        formData.append(
+          'subcategory_id',
+          this.addSubCategoryForm.controls['subCategoryId'].value
+        );
+      }
     }
     return formData;
+  }
+
+  public onMainCategoryClick(idx) {
+    this.subCategoryList = this.allCategoryList[idx];
+    this.isSubCategoryShow = true;
+  }
+
+  public onDeleteCategoryClick(categoryId): void {
+    let params = { category_id: categoryId };
+    console.log(params);
+    this.categoryService.deleteCategoryCall(params).subscribe((res) => {
+      this.getCategoryList();
+    }),
+      (err) => {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+        console.log('Error', err);
+      };
+  }
+
+  public onDeleteSubCategoryClick(categoryId): void {
+    let params = { category_id: categoryId };
+    console.log(params);
+    this.categoryService.deleteSubCategoryCall(params).subscribe((res) => {
+      this.getCategoryList();
+    }),
+      (err) => {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+        console.log('Error', err);
+      };
+  }
+
+  public backToCategoryList() {
+    this.isSubCategoryShow = false;
   }
 }

@@ -31,10 +31,50 @@ export class CategoryService {
       .pipe(catchError(this.handleError));
   }
 
+  public editCategoryCall(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.UPDATE_CATEGORY}`,
+        requestPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   public createSubCaegoryCall(requestPayload: any): Observable<any> {
     return this.http
       .post<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.SAVE_SUB_CATEGORY}`,
+        requestPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  public editSubCategoryCall(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.UPDATE_SUB_CATEGORY}`,
+        requestPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  public deleteCategoryCall(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.DELETE_CATEGORY}`,
+        requestPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  public deleteSubCategoryCall(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.DELETE_SUB_CATEGORY}`,
         requestPayload,
         httpOptions
       )

@@ -22,9 +22,12 @@
                   formControlName="productCategory"
                 >
                   <option value="">Select Category</option>
-                  <option value="1">Solapur</option>
-                  <option value="2">Pune</option>
-                  <option value="3">Mumbai</option>
+                  <option
+                    *ngFor="let category of allCategoryList"
+                    [value]="category.category_id"
+                    (onChange)="onCategoryChange(category.subcategory)"
+                    >{{ category.category_name }}</option
+                  >
                 </select>
                 <div
                   *ngIf="
@@ -54,9 +57,11 @@
                   formControlName="productSubCategory"
                 >
                   <option value="">Select Sub Category</option>
-                  <option value="1">Solapur</option>
-                  <option value="2">Pune</option>
-                  <option value="3">Mumbai</option>
+                  <option
+                    *ngFor="let category of allSubCategoryList"
+                    [value]="category.subcategory_id"
+                    >{{ category.subcategory_name }}</option
+                  >
                 </select>
                 <div
                   *ngIf="
@@ -128,7 +133,7 @@
                       <small
                         *ngIf="f.productQuantity.errors?.required"
                         class="text-danger"
-                        >Product quantity is required</small
+                        >Product quantity/Unit is required</small
                       >
                     </div>
                   </div>
@@ -296,6 +301,18 @@
                   placeholder="Enter product price"
                   formControlName="productPrice"
                 />
+                <div
+                  *ngIf="
+                    (f.productPrice.invalid && f.productPrice.touched) ||
+                    f.productPrice.dirty
+                  "
+                >
+                  <small
+                    *ngIf="f.productPrice.errors?.required"
+                    class="text-danger"
+                    >Product Price is required</small
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -347,6 +364,11 @@
                 type="button"
                 class="btn btn-block btn-warning saveOfferButton"
                 (click)="onAddOffer()"
+                [disabled]="
+                  this.productForm.controls['offerProductQuantity'].invalid ||
+                  this.productForm.controls['productPrice'].invalid ||
+                  this.productForm.controls['offerProductUnit'].invalid
+                "
               >
                 Add Offer
               </button>
@@ -384,7 +406,15 @@
                 type="button"
                 [ngClass]="setProductValue.saveButtonClass"
                 (click)="onSaveChangesClick()"
-                [disabled]="this.productForm.invalid"
+                [disabled]="
+                  this.productForm.controls['productCategory'].invalid ||
+                  this.productForm.controls['productSubCategory'].invalid ||
+                  this.productForm.controls['productName'].invalid ||
+                  this.productForm.controls['productQuantity'].invalid ||
+                  this.productForm.controls['productUnit'].invalid ||
+                  this.productForm.controls['image'].invalid ||
+                  this.offerList.length === 0
+                "
               >
                 {{ setProductValue.saveButtonName }}
               </button>

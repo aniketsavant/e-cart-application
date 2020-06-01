@@ -22,6 +22,16 @@ export class ProductService {
       .pipe(catchError(this.handleError));
   }
 
+  public uploadImageCall(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.UPLOAD_IMAGE}`,
+        requestPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

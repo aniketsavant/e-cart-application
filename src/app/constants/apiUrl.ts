@@ -20,4 +20,5 @@ export const MAIN_URL_CONSTANTS = {
   SAVE_PRODUCT: 'insertproduct.php',
   UPDATE_PRODUCT: 'editproduct.php',
   DELETE_PRODUCT: 'deleteproduct.php',
+  UPLOAD_IMAGE: 'uploadimage.php',
 };

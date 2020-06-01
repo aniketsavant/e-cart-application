@@ -30,6 +30,7 @@ export class AddProductComponent implements OnInit {
   allSubCategoryList: any;
   productQtyUnit = CONSTANT.FOR_PRODUCT_UNIT;
   discountRateUnit = CONSTANT.FOR_DISCOUNT_UNIT;
+  public files: any;
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
@@ -90,34 +91,73 @@ export class AddProductComponent implements OnInit {
     } else {
       this.productService
         .addProductCall(this.createAddProductPayload())
-        .subscribe((res) => {
-          if (res.status === 'Ok') {
-          } else {
-            this.toastr.error('Somthing wrong', 'Oops.!!');
+        .subscribe(
+          (res) => {
+            if (res.status === 'Ok') {
+              let formData = new FormData();
+              formData.append(
+                'files',
+                this.files,
+                +new Date() + '.' + this.files.name.split('.')[1]
+              );
+              formData.append('product_id', res.Id);
+              this.productService.uploadImageCall(formData).subscribe(
+                (res) => {
+                  this.productForm.reset();
+                },
+                (err) => {
+                  this.toastr.error('Something wrong', 'Oops.!!');
+                }
+              );
+            } else {
+              this.toastr.error('Something wrong', 'Oops.!!');
+            }
+          },
+          (err) => {
+            this.toastr.error('Something wrong', 'Oops.!!');
           }
-        }),
-        (err) => {
-          this.toastr.error('Somthing wrong', 'Oops.!!');
-        };
+        );
     }
   }
 
+  // public onImagechange(event): void {
+  //   this.urls = [];
+  //   let files = event.target.files;
+  //   this.arrFiles = [];
+  //   if (files) {
+  //     for (let file of files) {
+  //       var mimeType = file.type;
+  //       if (mimeType.match(/image\/*/) == null) {
+  //         alert('Only images are supported.');
+  //         return;
+  //       } else {
+  //         this.arrFiles.push(file);
+  //         let reader = new FileReader();
+  //         reader.onload = (e: any) => {
+  //           this.urls.push(e.target.result);
+  //         };
+  //         reader.readAsDataURL(file);
+  //       }
+  //     }
+  //   }
+  // }
+
   public onImagechange(event): void {
     this.urls = [];
-    let files = event.target.files;
-    if (files) {
-      for (let file of files) {
-        var mimeType = file.type;
-        if (mimeType.match(/image\/*/) == null) {
-          alert('Only images are supported.');
-          return;
-        } else {
-          let reader = new FileReader();
-          reader.onload = (e: any) => {
-            this.urls.push(e.target.result);
-          };
-          reader.readAsDataURL(file);
-        }
+    let file = event.target.files[0];
+    if (file) {
+      var mimeType = file.type;
+      if (mimeType.match(/image\/*/) == null) {
+        alert('Only images are supported.');
+        return;
+      } else {
+        this.files = file;
+        console.log(this.files);
+        let reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.urls.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
       }
     }
   }

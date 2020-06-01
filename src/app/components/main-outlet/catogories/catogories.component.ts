@@ -13,6 +13,7 @@ import {
   Category,
   SubCategory,
 } from '../../../interfaces/iCategory';
+import { element } from 'protractor';
 
 export function getAlertConfig(): AlertConfig {
   return Object.assign(new AlertConfig(), { type: 'success' });
@@ -46,6 +47,7 @@ export class CatogoriesComponent implements OnInit {
   public editMainCategory: any;
   public isEditForm = false;
   public subCategoryList: any;
+  public selectedCategoryId: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -320,13 +322,17 @@ export class CatogoriesComponent implements OnInit {
   }
 
   public onMainCategoryClick(idx) {
-    if (this.allCategoryList[idx]?.subcategory.length === 0) {
+    if (this.allCategoryList[idx]?.subcategory.length === 1) {
       this.toastr.error(
         'No sub category available for this category',
         'NO DATA..!!'
       );
     } else {
-      this.subCategoryList = this.allCategoryList[idx];
+      this.selectedCategoryId = this.allCategoryList[idx].category_id;
+      const tempForsubCatList = this.allCategoryList[idx].subcategory;
+      this.subCategoryList = tempForsubCatList.filter(
+        ({ status }) => status !== '0'
+      );
       this.isSubCategoryShow = true;
     }
   }
@@ -341,6 +347,7 @@ export class CatogoriesComponent implements OnInit {
           this.allCategoryList = this.allCategoryList.filter(
             ({ category_id }) => category_id !== cat.category_id
           );
+          this.toastr.error('Category deleted successfully', 'Done.!!');
           // this.ngxLoader.stop();
         } else {
           this.toastr.error('Somthing wrong', 'Oops.!!');
@@ -362,9 +369,11 @@ export class CatogoriesComponent implements OnInit {
       console.log(params);
       this.categoryService.deleteSubCategoryCall(params).subscribe((res) => {
         if (res.status == 'Ok') {
-          this.subCategoryList.subcategory = this.subCategoryList.subcategory.filter(
+          this.subCategoryList = this.subCategoryList.filter(
             ({ subcategory_id }) => subcategory_id !== subCat?.subcategory_id
           );
+          if (this.subCategoryList.length === 0) this.backToCategoryList();
+          this.toastr.error('Sub category deleted successfully', 'Done.!!');
           // this.ngxLoader.stop();
         } else {
           this.toastr.error('Somthing wrong', 'Oops.!!');

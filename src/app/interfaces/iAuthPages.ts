@@ -13,3 +13,17 @@ export interface UserData {
     userType: string;
     addresses?: Address[];
 }
+
+export interface UserList {
+    user_id: string;
+    full_name: string;
+    phone: string;
+    email: string;
+    full_address: string;
+    city: string;
+    state?: string;
+    country?: string;
+    landmark: string;
+    role: string;
+    status: string;
+  }

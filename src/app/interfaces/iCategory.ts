@@ -13,6 +13,7 @@ export interface SubCategory  {
   ubcategory_name: string;
   subcategory_description: string;
   subcategory_files: string;
+  status?:string;
 }
 
 export interface Category  {

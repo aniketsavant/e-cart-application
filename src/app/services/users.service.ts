@@ -12,10 +12,20 @@ import { httpOptions } from '../constants/httpHeaders';
 export class UsersService {
   constructor(private http: HttpClient) {}
 
-  public getUsersList(): Observable<any> {
+  public getUserList(): Observable<any> {
     return this.http
-      .get<any>(
-        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_USERS_LIST}`,
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_ALL_USER_LIST}`,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  public deleteUser(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.DELETE_SINGLE_USER}`,
+        requestPayload,
         httpOptions
       )
       .pipe(catchError(this.handleError));

@@ -50,7 +50,11 @@ export class UserComponent implements OnInit {
       } else {
         alert('no data found');
       }
-    });
+    }),
+      (err) => {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+        console.log('Error', err);
+      };
   }
 
   applyFilter(event: Event) {
@@ -73,7 +77,11 @@ export class UserComponent implements OnInit {
         } else {
           this.toastr.success(res.message, 'Oops.!!');
         }
-      });
+      }),
+        (err) => {
+          this.toastr.error('Somthing wrong', 'Oops.!!');
+          console.log('Error', err);
+        };
     }
   }
 }

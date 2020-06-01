@@ -32,6 +32,16 @@ export class ProductService {
       .pipe(catchError(this.handleError));
   }
 
+  public getAllProductsCall(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_PRODUCT_LIST}`,
+        requestPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

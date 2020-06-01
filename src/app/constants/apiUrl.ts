@@ -15,9 +15,9 @@ export const MAIN_URL_CONSTANTS = {
   DELETE_SUB_CATEGORY: 'deletesubcategory.php',
 
   GET_USERS_LIST: 'users.php',
-  DELETE_SINGLE_USER:'deletUser.php',
+  DELETE_SINGLE_USER: 'deletUser.php',
 
-  GET_PRODUCT_LIST: '',
+  GET_PRODUCT_LIST: 'product.php',
   SAVE_PRODUCT: 'insertproduct.php',
   UPDATE_PRODUCT: 'editproduct.php',
   DELETE_PRODUCT: 'deleteproduct.php',

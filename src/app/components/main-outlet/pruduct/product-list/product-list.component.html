@@ -3,20 +3,57 @@
     <strong>Add Category Form</strong>
   </div> -->
   <div class="card-body">
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group row">
-          <label class="col-md-3 col-form-label" for="category"
-            >Select Category:</label
-          >
-          <div class="col-md-9">
-            <select id="select1" name="select1" class="form-control">
-              <option value="1">Vegitale</option>
-              <option value="2">Fruits</option>
-              <option value="3">Milk Product</option>
-            </select>
+    <form [formGroup]="filterProductForm" *ngIf="this.filterProductForm">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="category"
+              >Select Category:</label
+            >
+            <div class="col-md-9">
+              <select
+                id="select1"
+                name="select1"
+                class="form-control"
+                formControlName="category_id"
+                (change)="onCategoryChange($event.target.value)"
+              >
+                <option
+                  *ngFor="let category of allCategoryList; let i = index"
+                  [value]="category.category_id"
+                  >{{ category.category_name }}</option
+                >
+              </select>
+            </div>
           </div>
         </div>
+        <div class="col-6">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="category"
+              >Select Sub Category:</label
+            >
+            <div class="col-md-9">
+              <select
+                id="select1"
+                name="select1"
+                class="form-control"
+                formControlName="subcategory_id"
+              >
+                <option
+                  *ngFor="let category of allSubCategoryList | slice: 1"
+                  [value]="category.subcategory_id"
+                >
+                  {{ category.subcategory_name }}</option
+                >
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="row">
+      <div class="col-6">
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
@@ -38,10 +75,10 @@
 </div>
 
 <div class="row" *ngIf="!isEdit">
-  <div class="col-sm-6 col-md-4">
+  <div class="col-sm-6 col-md-4" *ngFor="let item of allProductList">
     <div class="card card-accent-primary">
       <div class="card-header">
-        Capcicum (शिमला मिरची)
+        {{ item.product_name }}
         <div class="card-header-actions" style="height: 21px;">
           <label class="switch switch-sm switch-label switch-info">
             <input
@@ -62,7 +99,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-4">
-            <img src="assets/img/capsicum.jpg" alt="" class="productImage" />
+            <img [src]="item.product_files" alt="" class="productImage" />
           </div>
           <div class="col-8">
             <label
@@ -75,231 +112,31 @@
               ></label
             >
             <p>
-              <strong>Rate</strong>: 50/kg<br /><strong>Discription</strong>:
-              fresh veggie<br /><strong>Discount</strong>: 5%
+              <strong>Rate</strong>: {{ item.product_total_quantity }}/{{
+                item.product_total_quantity_unit
+              }}<br /><strong>Discription</strong>: {{ item.product_description
+              }}<br /><strong>Discount</strong>: 5%
             </p>
           </div>
         </div>
         <div class="row align-items-center buttonClass">
           <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary" (click)="onProductEditClick()">
+            <button
+              type="button"
+              class="btn btn-block btn-primary"
+              (click)="onProductEditClick()"
+            >
               Edit
             </button>
           </div>
           <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        Cabbage (कोबी)
-        <div class="card-header-actions" style="height: 21px;">
-          <label class="switch switch-sm switch-label switch-info">
-            <input
-              type="checkbox"
-              class="switch-input"
-              [(ngModel)]="availableSwitchValue"
-              checked
-              (change)="onAvailableCheckboxChange($event)"
-            />
-            <span
-              class="switch-slider"
-              data-checked="On"
-              data-unchecked="Off"
-            ></span>
-          </label>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-4">
-            <img src="assets/img/kobi.jpg" alt="" class="productImage" />
-          </div>
-          <div class="col-8">
-            <p>
-              <strong
-                [ngClass]="{
-                  'text-success': availableSwitchValue,
-                  'text-danger': !availableSwitchValue
-                }"
-                >{{ availableStatus }}</strong
-              ><br /><strong>Rate</strong>: 50/kg<br /><strong
-                >Discription</strong
-              >: fresh veggie<br /><strong>Discount</strong>: 5%
-            </p>
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
+            <button
+              type="button"
+              class="btn btn-block btn-dark"
+              (click)="onProductDeleteClick()"
+            >
+              Remove
             </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        Red beet (बीट)
-        <div class="card-header-actions" style="height: 21px;">
-          <label class="switch switch-sm switch-label switch-info">
-            <input
-              type="checkbox"
-              class="switch-input"
-              [(ngModel)]="availableSwitchValue"
-              checked
-              (change)="onAvailableCheckboxChange($event)"
-            />
-            <span
-              class="switch-slider"
-              data-checked="On"
-              data-unchecked="Off"
-            ></span>
-          </label>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-4">
-            <img src="assets/img/beet.jpg" alt="" class="productImage" />
-          </div>
-          <div class="col-8">
-            <p>
-              <strong
-                [ngClass]="{
-                  'text-success': availableSwitchValue,
-                  'text-danger': !availableSwitchValue
-                }"
-                >{{ availableStatus }}</strong
-              ><br /><strong>Rate</strong>: 50/kg<br /><strong
-                >Discription</strong
-              >: fresh veggie<br /><strong>Discount</strong>: 5%
-            </p>
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
-            </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        Maggi
-        <div class="card-header-actions" style="height: 21px;">
-          <label class="switch switch-sm switch-label switch-info">
-            <input
-              type="checkbox"
-              class="switch-input"
-              [(ngModel)]="availableSwitchValue"
-              checked
-              (change)="onAvailableCheckboxChange($event)"
-            />
-            <span
-              class="switch-slider"
-              data-checked="On"
-              data-unchecked="Off"
-            ></span>
-          </label>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-4">
-            <img src="assets/img/maggi.jpg" alt="" class="productImage" />
-          </div>
-          <div class="col-8">
-            <p>
-              <strong
-                [ngClass]="{
-                  'text-success': availableSwitchValue,
-                  'text-danger': !availableSwitchValue
-                }"
-                >{{ availableStatus }}</strong
-              ><br /><strong>Rate</strong>: 50/kg<br /><strong
-                >Discription</strong
-              >: fresh veggie<br /><strong>Discount</strong>: 5%
-            </p>
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
-            </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6 col-md-4">
-    <div class="card card-accent-primary">
-      <div class="card-header">
-        Kissan Fresh Tomato Ketchup
-        <div class="card-header-actions" style="height: 21px;">
-          <label class="switch switch-sm switch-label switch-info">
-            <input
-              type="checkbox"
-              class="switch-input"
-              [(ngModel)]="availableSwitchValue"
-              checked
-              (change)="onAvailableCheckboxChange($event)"
-            />
-            <span
-              class="switch-slider"
-              data-checked="On"
-              data-unchecked="Off"
-            ></span>
-          </label>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-4">
-            <img src="assets/img/kisansos.jpg" alt="" class="productImage" />
-          </div>
-          <div class="col-8">
-            <p>
-              <strong
-                [ngClass]="{
-                  'text-success': availableSwitchValue,
-                  'text-danger': !availableSwitchValue
-                }"
-                >{{ availableStatus }}</strong
-              ><br /><strong>Rate</strong>: 50/kg<br /><strong
-                >Discription</strong
-              >: fresh veggie<br /><strong>Discount</strong>: 5%
-            </p>
-          </div>
-        </div>
-        <div class="row align-items-center buttonClass">
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-primary">
-              Edit
-            </button>
-          </div>
-          <div class="col-6">
-            <button type="button" class="btn btn-block btn-dark">Remove</button>
           </div>
         </div>
       </div>
@@ -307,4 +144,8 @@
   </div>
 </div>
 
-<app-add-product *ngIf="isEdit" [isEdit]="isEdit" (closeForm)="closeFormCheck($event)"></app-add-product>
+<app-add-product
+  *ngIf="isEdit"
+  [isEdit]="isEdit"
+  (closeForm)="closeFormCheck($event)"
+></app-add-product>

@@ -216,8 +216,8 @@ export class AddProductComponent implements OnInit {
     this.productForm.controls['offerList'].patchValue(this.offerList);
   }
 
-  onCategoryChange(idex) {
-    this.allSubCategoryList = this.allCategoryList[idex]?.subcategory;
+  onCategoryChange(idx) {
+    this.allSubCategoryList = this.allCategoryList[idx]?.subcategory;
   }
 
   public createAddProductPayload() {

@@ -24,6 +24,7 @@ export const MAIN_URL_CONSTANTS = {
   UPLOAD_IMAGE: 'uploadimage.php',
 
   GET_ALL_ORDER_LIST: 'allOrder.php',
+  CHANGE_ORDER_STATUS: 'orderstatuschanged.php',
 
   GET_ALL_USER_LIST: 'getAlluser.php',
 };

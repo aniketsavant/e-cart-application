@@ -7,18 +7,28 @@ import { MAIN_URL_CONSTANTS } from '../constants/apiUrl';
 import { httpOptions } from '../constants/httpHeaders';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
+  public getAllOrder(): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_ALL_ORDER_LIST}`,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
 
-
-  public getAllOrder (): Observable<any> {
-    return this.http.post<any>(`${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_ALL_ORDER_LIST}`, httpOptions)
-      .pipe(
-        catchError(this.handleError)
-      );
+  public changeOrderStatus(tempPayload): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.CHANGE_ORDER_STATUS}`,
+        tempPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -29,11 +39,10 @@ export class OrderService {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
       console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+      );
     }
     // return an observable with a user-facing error message
-    return throwError(
-      'Something bad happened; please try again later.');
-  };
+    return throwError('Something bad happened; please try again later.');
+  }
 }

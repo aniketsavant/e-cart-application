@@ -1,44 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import { OrderService } from '../../../services/order.service';
 import { ToastrService } from 'ngx-toastr';
-
- const tableDataC : any =   [
-  {id: 1, name: 'Hydrogen', progress: 1.0079, color: 'H', action:'dispachted'},
-  {id: 2, name: 'Helium', progress: 4.0026, color: 'He', action:'dispachted'},
-  {id: 3, name: 'Lithium', progress: 6.941, color: 'Li', action:'dispachted'},
-  {id: 4, name: 'Beryllium', progress: 9.0122, color: 'Be', action:'dispachted'},
-  {id: 5, name: 'Boron', progress: 10.811, color: 'B', action:'dispachted'},
-  {id: 6, name: 'Carbon', progress: 12.0107, color: 'C', action:'dispachted'},
-  {id: 7, name: 'Nitrogen', progress: 14.0067, color: 'N', action:'dispachted' }, 
-  {id: 8, name: 'Oxygen', progress: 15.9994, color: 'O', action:'dispachted'},
-  {id: 9, name: 'Fluorine', progress: 18.9984, color: 'F', action:'dispachted'},
-  {id: 10, name: 'Neon', progress: 20.1797, color: 'Ne', action:'dispachted'},
-  {id: 1, name: 'Hydrogen', progress: 1.0079, color: 'H', action:'dispachted'},
-  {id: 2, name: 'Helium', progress: 4.0026, color: 'He', action:'dispachted'},
-  {id: 3, name: 'Lithium', progress: 6.941, color: 'Li', action:'dispachted'},
-  {id: 4, name: 'Beryllium', progress: 9.0122, color: 'Be', action:'dispachted'},
-  {id: 5, name: 'Boron', progress: 10.811, color: 'B', action:'dispachted'},
-  {id: 6, name: 'Carbon', progress: 12.0107, color: 'C', action:'dispachted'},
-  {id: 7, name: 'Nitrogen', progress: 14.0067, color: 'N', action:'dispachted'},
-  {id: 8, name: 'Oxygen', progress: 15.9994, color: 'O', action:'dispachted'},
-  {id: 9, name: 'Fluorine', progress: 18.9984, color: 'F', action:'dispachted'},
-  {id: 10, name: 'Neon', progress: 20.1797, color: 'Ne', action:'dispachted'},
-  {id: 1, name: 'Hydrogen', progress: 1.0079, color: 'H', action:'dispachted'},
-  {id: 2, name: 'Helium', progress: 4.0026, color: 'He', action:'dispachted'},
-  {id: 3, name: 'Lithium', progress: 6.941, color: 'Li', action:'dispachted'},
-  {id: 4, name: 'Beryllium', progress: 9.0122, color: 'Be', action:'dispachted'},
-  {id: 5, name: 'Boron', progress: 10.811, color: 'B', action:'dispachted'},
-  {id: 6, name: 'Carbon', progress: 12.0107, color: 'C', action:'dispachted'},
-  {id: 7, name: 'Nitrogen', progress: 14.0067, color: 'N', action:'dispachted'},
-  {id: 8, name: 'Oxygen', progress: 15.9994, color: 'O', action:'dispachted'},
-  {id: 9, name: 'Fluorine', progress: 18.9984, color: 'F', action:'dispachted'},
-  {id: 10, name: 'Neon', progress: 20.1797, color: 'Ne', action:'dispachted'},
-];
 
 export interface PeriodicElement {
   id: number;
@@ -58,23 +33,40 @@ export function getAlertConfig(): AlertConfig {
   styleUrls: ['./order-list.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
     ]),
   ],
-  providers: [{ provide: AlertConfig, useFactory: getAlertConfig }]
+  providers: [{ provide: AlertConfig, useFactory: getAlertConfig }],
 })
 export class OrderListComponent implements OnInit {
-
-  columnsToDisplay : string[] = ['id', 'name', 'progress', 'color', 'action'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource(tableDataC);
+  columnsToDisplay: string[] = [
+    'product_id',
+    'full_name',
+    'phone',
+    'full_address',
+    'total_amount',
+    'order_date',
+    'status',
+    'orderList',
+  ];
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
   expandedElement: PeriodicElement | null;
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild('showOrderList')
+  public showOrderList: ModalDirective;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  public selectedOrderList: any;
 
-  constructor(public orderService: OrderService, private toastr: ToastrService) { }
+  constructor(
+    public orderService: OrderService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -82,14 +74,18 @@ export class OrderListComponent implements OnInit {
     this.getAllOrderList();
   }
 
-  public getAllOrderList(){
-    this.orderService.getAllOrder().subscribe(res=>{
-      if(res){
-        console.log(res);
-      }else{
-        this.toastr.error('Somthing went wrong','Oops.!!');
+  public getAllOrderList() {
+    this.orderService.getAllOrder().subscribe((res) => {
+      if (res) {
+        this.dataSource = new MatTableDataSource(res);
+      } else {
+        this.toastr.error('Somthing went wrong', 'Oops.!!');
       }
-    })
+    }),
+      (err) => {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+        console.log('Error', err);
+      };
   }
 
   applyFilter(event: Event) {
@@ -99,5 +95,32 @@ export class OrderListComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  public onOrderListClick(selectedOrder): void {
+    this.selectedOrderList = selectedOrder.orderList;
+    console.log(this.selectedOrderList);
+    this.showOrderList.show();
+  }
+
+  public changeOrderStatus(orderId: string, statusValue: string): void {
+    const tempPayloadForChangeStatus = {
+      status: statusValue,
+      id: orderId,
+    };
+    this.orderService
+      .changeOrderStatus(tempPayloadForChangeStatus)
+      .subscribe((res) => {
+        if (res.status === 'Ok') {
+          this.toastr.success('Status changed successfully', 'Done.!!');
+          this.getAllOrderList();
+        } else {
+          this.toastr.error(res.message, 'Oops..!!');
+        }
+      }),
+      (err) => {
+        this.toastr.error('Somthing wrong', 'Oops.!!');
+        console.log('Error', err);
+      };
   }
 }

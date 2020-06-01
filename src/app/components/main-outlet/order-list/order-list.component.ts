@@ -4,7 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { AlertConfig } from 'ngx-bootstrap/alert';
-
+import { OrderService } from '../../../services/order.service';
+import { ToastrService } from 'ngx-toastr';
 
  const tableDataC : any =   [
   {id: 1, name: 'Hydrogen', progress: 1.0079, color: 'H', action:'dispachted'},
@@ -73,11 +74,22 @@ export class OrderListComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor() { }
+  constructor(public orderService: OrderService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.getAllOrderList();
+  }
+
+  public getAllOrderList(){
+    this.orderService.getAllOrder().subscribe(res=>{
+      if(res){
+        console.log(res);
+      }else{
+        this.toastr.error('Somthing went wrong','Oops.!!');
+      }
+    })
   }
 
   applyFilter(event: Event) {

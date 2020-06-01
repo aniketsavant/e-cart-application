@@ -22,24 +22,24 @@
                           type="text"
                           class="form-control"
                           placeholder="Full Name"
-                          autocomplete="fullName"
-                          formControlName="fullName"
+                          autocomplete="full_name"
+                          formControlName="full_name"
                           required
                         />
                       </div>
                       <div
                         *ngIf="
-                          (f.fullName.invalid && f.fullName.touched) ||
-                          f.fullName.dirty
+                          (f.full_name.invalid && f.full_name.touched) ||
+                          f.full_name.dirty
                         "
                       >
                         <small
-                          *ngIf="f.fullName.errors?.required"
+                          *ngIf="f.full_name.errors?.required"
                           class="text-danger"
                           >Full name is required</small
                         >
                         <small
-                          *ngIf="f.fullName.errors?.pattern"
+                          *ngIf="f.full_name.errors?.pattern"
                           class="text-danger"
                           >Only alphabets is allowed</small
                         >
@@ -58,25 +58,25 @@
                           type="text"
                           class="form-control"
                           placeholder="Phone Number"
-                          autocomplete="phoneNumber"
-                          formControlName="phoneNumber"
+                          autocomplete="phone"
+                          formControlName="phone"
                           maxlength="10"
                           required
                         />
                       </div>
                       <div
                         *ngIf="
-                          (f.phoneNumber.invalid && f.phoneNumber.touched) ||
-                          f.phoneNumber.dirty
+                          (f.phone.invalid && f.phone.touched) ||
+                          f.phone.dirty
                         "
                       >
                         <small
-                          *ngIf="f.phoneNumber.errors?.required"
+                          *ngIf="f.phone.errors?.required"
                           class="text-danger"
                           >Phone number is required</small
                         >
                         <small
-                          *ngIf="f.phoneNumber.errors?.pattern"
+                          *ngIf="f.phone.errors?.pattern"
                           class="text-danger"
                           >Please provide a valid phone number</small
                         >
@@ -151,19 +151,19 @@
                       type="password"
                       class="form-control"
                       placeholder="Repeat password"
-                      autocomplete="repeatPassword"
-                      formControlName="repeatPassword"
+                      autocomplete="re_password"
+                      formControlName="re_password"
                       required
                     />
                   </div>
                   <div
                     *ngIf="
-                      (f.repeatPassword.invalid && f.repeatPassword.touched) ||
-                      f.repeatPassword.dirty
+                      (f.re_password.invalid && f.re_password.touched) ||
+                      f.re_password.dirty
                     "
                   >
                     <small
-                      *ngIf="f.repeatPassword.errors?.required"
+                      *ngIf="f.re_password.errors?.required"
                       class="text-danger"
                       >Repeat password is required</small
                     >
@@ -187,19 +187,19 @@
                       type="text"
                       class="form-control"
                       placeholder="Full Address"
-                      autocomplete="fullAddress"
-                      formControlName="fullAddress"
+                      autocomplete="full_address"
+                      formControlName="full_address"
                       required
                     />
                   </div>
                   <div
                     *ngIf="
-                      (f.fullAddress.invalid && f.fullAddress.touched) ||
-                      f.fullAddress.dirty
+                      (f.full_address.invalid && f.full_address.touched) ||
+                      f.full_address.dirty
                     "
                   >
                     <small
-                      *ngIf="f.fullAddress.errors?.required"
+                      *ngIf="f.full_address.errors?.required"
                       class="text-danger"
                       >Full address is required</small
                     >

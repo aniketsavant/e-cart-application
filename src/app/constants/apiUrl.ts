@@ -21,4 +21,8 @@ export const MAIN_URL_CONSTANTS = {
   UPDATE_PRODUCT: 'editproduct.php',
   DELETE_PRODUCT: 'deleteproduct.php',
   UPLOAD_IMAGE: 'uploadimage.php',
+
+  GET_ALL_ORDER_LIST: 'allOrder.php',
+
+  GET_ALL_USER_LIST: 'getAlluser.php',
 };

@@ -52,6 +52,24 @@ export class ProductService {
       .pipe(catchError(this.handleError));
   }
 
+  public deleteProduct(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.DELETE_PRODUCT}`,
+        requestPayload
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  public changeProductStatus(requestPayload: any): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.CHANGE_PRODUCT_STATUS}`,
+        requestPayload
+      )
+      .pipe(catchError(this.handleError));
+  }
+
   public saveProductDetails(data) {
     this.productData = data;
   }

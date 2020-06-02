@@ -22,6 +22,7 @@ export const MAIN_URL_CONSTANTS = {
   UPDATE_PRODUCT: 'editproduct.php',
   DELETE_PRODUCT: 'deleteproduct.php',
   UPLOAD_IMAGE: 'uploadimage.php',
+  CHANGE_PRODUCT_STATUS:'changeProductStatus.php',
 
   GET_ALL_ORDER_LIST: 'allOrder.php',
   CHANGE_ORDER_STATUS: 'orderstatuschanged.php',

@@ -3,7 +3,7 @@
     <strong>Add Category Form</strong>
   </div> -->
   <div class="card-body">
-    <form [formGroup]="filterProductForm" *ngIf="this.filterProductForm">
+    <form>
       <div class="row">
         <div class="col-6">
           <div class="form-group row">
@@ -15,9 +15,9 @@
                 id="select1"
                 name="select1"
                 class="form-control"
-                formControlName="category_id"
                 (change)="onCategoryChange($event.target.value)"
               >
+                <option value="0">Select Category</option>
                 <option
                   *ngFor="let category of allCategoryList; let i = index"
                   [value]="category.category_id"
@@ -28,36 +28,24 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="form-group row">
-            <label class="col-md-3 col-form-label" for="category"
-              >Select Sub Category:</label
+          <div class="form-group row" *ngIf="allSubCategoryList.length > 1">
+            <label class="col-md-3 col-form-label" for="category">
+              Sub Category:</label
             >
             <div class="col-md-9">
               <select
                 id="select1"
                 name="select1"
                 class="form-control"
-                formControlName="subcategory_id"
-                *ngIf="allSubCategoryList.length === 1"
+                (change)="getAllProducts($event.target.value)"
               >
-                <option [value]="allSubCategoryList[0].subcategory_id" selected
-                  >No Sub Category available</option
-                >
-              </select>
-              <select
-                id="select1"
-                name="select1"
-                class="form-control"
-                formControlName="subcategory_id"
-                *ngIf="allSubCategoryList.length > 1"
-              >
+                <option value="0">Select Category</option>
                 <option
                   *ngFor="
                     let category of allSubCategoryList | slice: 1;
                     let i = index
                   "
                   [value]="category.subcategory_id"
-                  [selected]="i === 0"
                 >
                   {{ category.subcategory_name }}</option
                 >
@@ -90,19 +78,21 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-sm-6 col-md-4" *ngFor="let item of allProductList">
+<div class="row" *ngIf="allProductList.length > 0">
+  <div
+    class="col-sm-6 col-md-4"
+    *ngFor="let item of allProductList; let i = index"
+  >
     <div class="card card-accent-primary">
       <div class="card-header">
-        {{ item.product_name }}
+       <strong> {{ item.product_name }}</strong>
         <div class="card-header-actions" style="height: 21px;">
           <label class="switch switch-sm switch-label switch-info">
             <input
               type="checkbox"
               class="switch-input"
-              [(ngModel)]="availableSwitchValue"
-              checked
-              (change)="onAvailableCheckboxChange($event)"
+              [checked]="item.status == 1"
+              (change)="onAvailableCheckboxChange(item, i)"
             />
             <span
               class="switch-slider"
@@ -115,23 +105,21 @@
       <div class="card-body">
         <div class="row">
           <div class="col-4">
-            <img [src]="item.product_files" alt="" class="productImage" />
+            <img [src]="item.product_image" alt="" class="productImage" />
           </div>
           <div class="col-8">
             <label
               ><strong
                 [ngClass]="{
-                  'text-success': availableSwitchValue,
-                  'text-danger': !availableSwitchValue
+                  'text-success': item.status == 1,
+                  'text-danger': item.status != 1
                 }"
-                >{{ availableStatus }}</strong
+                >{{ item.status == 1 ? "Avalable" : "Out Of Stauck" }}</strong
               ></label
             >
             <p>
-              <strong>Rate</strong>: {{ item.product_total_quantity }}/{{
-                item.product_total_quantity_unit
-              }}<br /><strong>Discription</strong>: {{ item.product_description
-              }}<br /><strong>Discount</strong>: 5%
+              <strong>Discription</strong>: {{ item.product_description }}<br />
+              <strong>Available Quantity</strong>: {{item.product_total_quantity}} {{item.product_total_quantity_unit | titlecase}}
             </p>
           </div>
         </div>
@@ -149,7 +137,7 @@
             <button
               type="button"
               class="btn btn-block btn-dark"
-              (click)="onProductDeleteClick()"
+              (click)="onProductDeleteClick(item)"
             >
               Remove
             </button>

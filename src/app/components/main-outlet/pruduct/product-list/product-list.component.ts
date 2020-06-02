@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertConfig } from 'ngx-bootstrap/alert';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CategoryService } from 'src/app/services/category.service';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from 'src/app/services/product.service';
@@ -16,45 +15,25 @@ export function getAlertConfig(): AlertConfig {
   providers: [{ provide: AlertConfig, useFactory: getAlertConfig }],
 })
 export class ProductListComponent implements OnInit {
-  public availableStatus: string;
-  public availableSwitchValue: boolean = true;
   public isEdit: boolean = false;
-  filterProductForm: FormGroup;
-  allCategoryList: any;
-  allSubCategoryList: any;
-  allProductList: any;
+  public allCategoryList: any = [];
+  public allSubCategoryList: any = [];
+  public allProductList: any = [];
 
   constructor(
-    private formBuilder: FormBuilder,
     private categoryService: CategoryService,
     private productService: ProductService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.availableStatus = this.availableSwitchValue
-      ? 'Available'
-      : 'Not Available';
-
     this.getAllCategory();
-    this.getAllProducts('39');
   }
 
-  filterProductFormInitialized() {
-    this.filterProductForm = this.formBuilder.group({
-      category_id: [this.allCategoryList[0].category_id, Validators.required],
-      subcategory_id: [
-        this.allSubCategoryList[0].subcategory_id,
-        Validators.required,
-      ],
-    });
-  }
   getAllCategory() {
     this.categoryService.getAllCategoryListCall().subscribe((res) => {
       if (res.status === 'Ok') {
         this.allCategoryList = res.data;
-        this.allSubCategoryList = this.allCategoryList[0].subcategory;
-        this.filterProductFormInitialized();
       } else {
         this.toastr.error('Something wrong', 'Oops.!!');
       }
@@ -64,10 +43,28 @@ export class ProductListComponent implements OnInit {
       };
   }
 
-  public onAvailableCheckboxChange(event): void {
-    this.availableStatus = this.availableSwitchValue
-      ? 'Available'
-      : 'Not Available';
+  public onAvailableCheckboxChange(productValue, i): void {
+    const tempPayloadForChangeOrderStatus = {
+      product_id: productValue.product_id,
+      status: productValue.status === '1' ? '0' : '1',
+    };
+    this.productService
+      .changeProductStatus(tempPayloadForChangeOrderStatus)
+      .subscribe((res) => {
+        if (res.status === 'Ok') {
+          this.toastr.success(
+            'Status changed for ' + productValue.product_name,
+            'Done.!!'
+          );
+          this.allProductList[i].status =
+            productValue.status === '1' ? '0' : '1';
+        } else {
+          this.toastr.error('Try again later', 'Oops.!!');
+        }
+      }),
+      (err) => {
+        this.toastr.error('Something went wrong.', 'Oops.!!');
+      };
   }
 
   public onProductEditClick(productData): void {
@@ -81,27 +78,53 @@ export class ProductListComponent implements OnInit {
   }
 
   public getAllProducts(subcategory_id) {
-    const formData = new FormData();
-    formData.append('subcategory_id', subcategory_id);
-    this.productService.getAllProductsCall(formData).subscribe((res) => {
-      this.allProductList = res;
-
-      // if (res.status === 'Ok') {
-      //   this.allProductList = res.data;
-      // } else {
-      //   this.toastr.error('Something wrong3344', 'Oops.!!');
-      // }
-    }),
-      (err) => {
-        this.toastr.error('Something wrong', 'Oops.!!');
-      };
+    if (subcategory_id !== '0') {
+      const formData = new FormData();
+      formData.append('subcategory_id', subcategory_id);
+      this.productService.getAllProductsCall(formData).subscribe((res) => {
+        if (res[0].status !== 'error') this.allProductList = res;
+        else
+          this.toastr.error(
+            'Product not available for this categrory',
+            'Oops..!!'
+          );
+      }),
+        (err) => {
+          this.toastr.error('Something wrong', 'Oops.!!');
+        };
+    }
   }
 
   onCategoryChange(idx) {
-    this.allSubCategoryList = this.allCategoryList.filter(
-      (x) => x.category_id === idx
-    )[0]?.subcategory;
+    this.allProductList = [];
+    this.allSubCategoryList =
+      idx === '0'
+        ? []
+        : this.allCategoryList.filter((x) => x.category_id === idx)[0]
+            ?.subcategory;
+    if (this.allSubCategoryList.length == 1) {
+      this.getAllProducts(this.allSubCategoryList[0].subcategory_id);
+    }
   }
 
-  onProductDeleteClick() {}
+  onProductDeleteClick(product) {
+    if (confirm('Are you sure to delete ' + product.product_name)) {
+      const tempForProductId = {
+        product_id: product.product_id,
+      };
+      this.productService.deleteProduct(tempForProductId).subscribe((res) => {
+        if (res.status === 'Ok') {
+          this.toastr.success('Product deleted successfully', 'Done.!!');
+          this.allProductList = this.allProductList.filter(
+            ({ product_id }) => product_id !== product.product_id
+          );
+        } else {
+          this.toastr.error('try again lalter', 'Oops.!!');
+        }
+      }),
+        (err) => {
+          this.toastr.error('Somthing went wrong', 'Oops.!!');
+        };
+    }
+  }
 }

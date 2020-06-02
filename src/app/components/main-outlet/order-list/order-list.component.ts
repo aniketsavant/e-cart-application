@@ -56,13 +56,14 @@ export class OrderListComponent implements OnInit {
   ];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   expandedElement: PeriodicElement | null;
-
+  @ViewChild('openModelForOrderLimit')
+  public openModelForOrderLimit: ModalDirective;
   @ViewChild('showOrderList')
   public showOrderList: ModalDirective;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public selectedOrderList: any;
-
+  public selectedOrderLimit: number;
   constructor(
     public orderService: OrderService,
     private toastr: ToastrService
@@ -72,6 +73,7 @@ export class OrderListComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.getAllOrderList();
+    this.getOrderLimit();
   }
 
   public getAllOrderList() {
@@ -121,6 +123,39 @@ export class OrderListComponent implements OnInit {
       (err) => {
         this.toastr.error('Somthing wrong', 'Oops.!!');
         console.log('Error', err);
+      };
+  }
+
+  public getOrderLimit(): void {
+    this.orderService.getOrderLimit().subscribe((res) => {
+      if (res.status === 'Ok') {
+        this.selectedOrderLimit = Number(res.data);
+      } else {
+        console.log("Somthing goes wrong..!!");
+      }
+      this.openModelForOrderLimit.hide();
+    }),
+      (err) => {
+        console.log(err);
+      };
+  }
+
+
+  public setOrderLimit(): void {
+    const limitPayload = {
+      order_limit : this.selectedOrderLimit
+    }
+    this.orderService.setOrderLimit(limitPayload).subscribe((res) => {
+      if (res.status === 'Ok') {
+        this.toastr.success('Oreder Limit set.','Done.!!');
+      } else {
+        this.toastr.error('Try agin later','Oops..!!');
+      }
+      this.openModelForOrderLimit.hide();
+    }),
+      (err) => {
+        this.toastr.error('Try agin later','Oops..!!');
+        console.log(err);
       };
   }
 }

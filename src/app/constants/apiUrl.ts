@@ -27,4 +27,7 @@ export const MAIN_URL_CONSTANTS = {
   CHANGE_ORDER_STATUS: 'orderstatuschanged.php',
 
   GET_ALL_USER_LIST: 'getAlluser.php',
+
+  SET_ORDER_LIMIT:"setOrderLimit.php",
+  GET_ORDER_LIMIT:"getOrderLimit.php"
 };

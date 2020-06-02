@@ -31,6 +31,26 @@ export class OrderService {
       .pipe(catchError(this.handleError));
   }
 
+  public setOrderLimit(tempPayload): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.SET_ORDER_LIMIT}`,
+        tempPayload,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  public getOrderLimit(): Observable<any> {
+    return this.http
+      .post<any>(
+        `${environment.BASE_URL}${MAIN_URL_CONSTANTS.GET_ORDER_LIMIT}`,
+        httpOptions
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

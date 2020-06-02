@@ -36,28 +36,31 @@ export class ProductListComponent implements OnInit {
       ? 'Available'
       : 'Not Available';
 
-    this.filterProductForm = this.formBuilder.group({
-      category_id: ['', Validators.required],
-      subcategory_id: ['', Validators.required],
-    });
-
     this.getAllCategory();
-    this.getAllProducts(
-      this.filterProductForm.controls['subcategory_id'].value
-    );
+    this.getAllProducts('39');
   }
 
+  filterProductFormInitialized() {
+    this.filterProductForm = this.formBuilder.group({
+      category_id: [this.allCategoryList[0].category_id, Validators.required],
+      subcategory_id: [
+        this.allSubCategoryList[0].subcategory_id,
+        Validators.required,
+      ],
+    });
+  }
   getAllCategory() {
     this.categoryService.getAllCategoryListCall().subscribe((res) => {
       if (res.status === 'Ok') {
         this.allCategoryList = res.data;
         this.allSubCategoryList = this.allCategoryList[0].subcategory;
+        this.filterProductFormInitialized();
       } else {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
+        this.toastr.error('Something wrong', 'Oops.!!');
       }
     }),
       (err) => {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
+        this.toastr.error('Something wrong', 'Oops.!!');
       };
   }
 
@@ -65,12 +68,11 @@ export class ProductListComponent implements OnInit {
     this.availableStatus = this.availableSwitchValue
       ? 'Available'
       : 'Not Available';
-    console.log(event);
-    console.log(this.availableSwitchValue);
   }
 
-  public onProductEditClick(): void {
+  public onProductEditClick(productData): void {
     this.isEdit = true;
+    this.productService.saveProductDetails(productData);
   }
 
   public closeFormCheck(value: boolean): void {
@@ -79,16 +81,19 @@ export class ProductListComponent implements OnInit {
   }
 
   public getAllProducts(subcategory_id) {
-    let params = { subcategory_id: subcategory_id };
-    this.productService.getAllProductsCall(params).subscribe((res) => {
-      if (res.status === 'Ok') {
-        this.allProductList = res.data;
-      } else {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
-      }
+    const formData = new FormData();
+    formData.append('subcategory_id', subcategory_id);
+    this.productService.getAllProductsCall(formData).subscribe((res) => {
+      this.allProductList = res;
+
+      // if (res.status === 'Ok') {
+      //   this.allProductList = res.data;
+      // } else {
+      //   this.toastr.error('Something wrong3344', 'Oops.!!');
+      // }
     }),
       (err) => {
-        this.toastr.error('Somthing wrong', 'Oops.!!');
+        this.toastr.error('Something wrong', 'Oops.!!');
       };
   }
 
@@ -97,4 +102,6 @@ export class ProductListComponent implements OnInit {
       (x) => x.category_id === idx
     )[0]?.subcategory;
   }
+
+  onProductDeleteClick() {}
 }

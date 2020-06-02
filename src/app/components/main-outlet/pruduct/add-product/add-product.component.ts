@@ -30,7 +30,8 @@ export class AddProductComponent implements OnInit {
   allSubCategoryList: any;
   productQtyUnit = CONSTANT.FOR_PRODUCT_UNIT;
   discountRateUnit = CONSTANT.FOR_DISCOUNT_UNIT;
-  public files: any;
+  public files = null;
+  productDetails: any;
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
@@ -40,6 +41,7 @@ export class AddProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({
+      productId: [''],
       productCategory: ['', Validators.required],
       productSubCategory: ['', Validators.required],
       productName: ['', Validators.required],
@@ -62,6 +64,11 @@ export class AddProductComponent implements OnInit {
       : CONSTANT.FOR_PRODUCT_SAVE;
 
     this.getAllCategory();
+
+    if (this.isEdit) {
+      this.productDetails = this.productService.getProductDetails();
+      this.patchProductData(this.productDetails);
+    }
   }
 
   getAllCategory() {
@@ -88,19 +95,60 @@ export class AddProductComponent implements OnInit {
   public onSaveChangesClick(): void {
     if (this.isEdit) {
       this.closeForm.emit(true);
+      this.editProductData();
     } else {
-      this.productService
-        .addProductCall(this.createAddProductPayload())
-        .subscribe(
-          (res) => {
-            if (res.status === 'Ok') {
+      this.addProductData();
+    }
+  }
+
+  addProductData() {
+    this.productService
+      .addProductCall(this.createAddProductPayload())
+      .subscribe(
+        (res) => {
+          if (res.status === 'Ok') {
+            let formData = new FormData();
+            formData.append(
+              'files',
+              this.files,
+              +new Date() + '.' + this.files.name.split('.')[1]
+            );
+            formData.append('product_id', res.Id);
+            this.productService.uploadImageCall(formData).subscribe(
+              (res) => {
+                this.productForm.reset();
+              },
+              (err) => {
+                this.toastr.error('Something wrong', 'Oops.!!');
+              }
+            );
+          } else {
+            this.toastr.error('Something wrong', 'Oops.!!');
+          }
+        },
+        (err) => {
+          this.toastr.error('Something wrong', 'Oops.!!');
+        }
+      );
+  }
+
+  editProductData() {
+    this.productService
+      .editProductCall(this.createAddProductPayload())
+      .subscribe(
+        (res) => {
+          if (res.status === 'Ok') {
+            if (this.files) {
               let formData = new FormData();
               formData.append(
                 'files',
                 this.files,
                 +new Date() + '.' + this.files.name.split('.')[1]
               );
-              formData.append('product_id', res.Id);
+              formData.append(
+                'product_id',
+                this.productForm.get('productId').value
+              );
               this.productService.uploadImageCall(formData).subscribe(
                 (res) => {
                   this.productForm.reset();
@@ -109,17 +157,16 @@ export class AddProductComponent implements OnInit {
                   this.toastr.error('Something wrong', 'Oops.!!');
                 }
               );
-            } else {
-              this.toastr.error('Something wrong', 'Oops.!!');
             }
-          },
-          (err) => {
+          } else {
             this.toastr.error('Something wrong', 'Oops.!!');
           }
-        );
-    }
+        },
+        (err) => {
+          this.toastr.error('Something wrong', 'Oops.!!');
+        }
+      );
   }
-
   // public onImagechange(event): void {
   //   this.urls = [];
   //   let files = event.target.files;
@@ -152,7 +199,6 @@ export class AddProductComponent implements OnInit {
         return;
       } else {
         this.files = file;
-        console.log(this.files);
         let reader = new FileReader();
         reader.onload = (e: any) => {
           this.urls.push(e.target.result);
@@ -163,6 +209,27 @@ export class AddProductComponent implements OnInit {
   }
 
   public onAddOffer() {
+    this.createOfferListArray();
+    [
+      'offerName',
+      'offerProductQuantity',
+      'productPrice',
+      'discountRate',
+      'discountPrice',
+    ].map((item) => {
+      this.productForm.controls[item].reset();
+    });
+
+    this.productForm.controls['offerProductUnit'].patchValue('');
+    this.productForm.controls['discountRateUnit'].patchValue('');
+    this.productForm.controls['offerProductUnit'].clearValidators();
+    this.productForm.controls['discountRateUnit'].clearValidators();
+    this.productForm.controls['offerProductUnit'].updateValueAndValidity();
+    this.productForm.controls['discountRateUnit'].updateValueAndValidity();
+    this.productForm.controls['offerList'].patchValue(this.offerList);
+  }
+
+  createOfferListArray() {
     if (
       this.productForm.controls['offerProductQuantity'].valid &&
       this.productForm.controls['productPrice'].valid &&
@@ -193,22 +260,6 @@ export class AddProductComponent implements OnInit {
       }
       this.offerList.push(objOffer);
     }
-    [
-      'offerName',
-      'offerProductQuantity',
-      'productPrice',
-      'discountRate',
-      'discountPrice',
-    ].map((item) => {
-      this.productForm.controls[item].reset();
-    });
-    this.productForm.controls['offerProductUnit'].patchValue('');
-    this.productForm.controls['discountRateUnit'].patchValue('');
-    this.productForm.controls['offerProductUnit'].clearValidators();
-    this.productForm.controls['discountRateUnit'].clearValidators();
-    this.productForm.controls['offerProductUnit'].updateValueAndValidity();
-    this.productForm.controls['discountRateUnit'].updateValueAndValidity();
-    this.productForm.controls['offerList'].patchValue(this.offerList);
   }
 
   public onRemoveOffer(idx) {
@@ -221,14 +272,69 @@ export class AddProductComponent implements OnInit {
   }
 
   public createAddProductPayload() {
-    let params = {
-      product_name: this.productForm.get('productName').value,
-      subcategory_id: this.productForm.get('productSubCategory').value,
-      product_description: this.productForm.get('productDescription').value,
-      product_total_quantity: this.productForm.get('productQuantity').value,
-      product_total_quantity_unit: this.productForm.get('productUnit').value,
-      productSales: this.offerList,
-    };
+    let params;
+    if (!this.isEdit) {
+      params = {
+        product_name: this.productForm.get('productName').value,
+        subcategory_id: this.productForm.get('productSubCategory').value,
+        product_description: this.productForm.get('productDescription').value,
+        product_total_quantity: this.productForm.get('productQuantity').value,
+        product_total_quantity_unit: this.productForm.get('productUnit').value,
+        productSales: this.offerList,
+      };
+    } else {
+      params = {
+        product_id: this.productForm.get('productId').value,
+        product_name: this.productForm.get('productName').value,
+        subcategory_id: this.productForm.get('productSubCategory').value,
+        product_description: this.productForm.get('productDescription').value,
+        product_total_quantity: this.productForm.get('productQuantity').value,
+        product_total_quantity_unit: this.productForm.get('productUnit').value,
+        product_sales: this.offerList,
+      };
+    }
+
     return params;
+  }
+
+  patchProductData(data) {
+    this.productForm.controls['productId'].patchValue(data.product_id);
+    this.productForm.controls['productCategory'].patchValue('');
+    this.productForm.controls['productSubCategory'].patchValue(
+      data.subcategory_id
+    );
+    this.productForm.controls['productName'].patchValue(data.product_name);
+    this.productForm.controls['productDescription'].patchValue(
+      data.product_description
+    );
+    this.productForm.controls['productQuantity'].patchValue(
+      data.product_total_quantity
+    );
+    this.productForm.controls['productUnit'].patchValue(
+      data.product_total_quantity_unit
+    );
+    this.productForm.controls['image'].clearValidators();
+    this.productForm.controls['image'].updateValueAndValidity();
+    this.urls.push(data.product_files);
+
+    data.product_sales.map((item, index) => {
+      let objOffer = {
+        offer_name: item.offer_name,
+        item_quantity: item.item_quantity,
+        item_unit: item.item_unit,
+        item_discount_price: item.item_discount_price,
+        item_discount_unit: item.item_discount_unit,
+        item_discount_percent: '',
+        item_discount_rupee: '',
+      };
+      if (item.item_discount_percent !== '') {
+        objOffer.item_discount_percent = item.item_discount_percent;
+        objOffer.item_discount_rupee = '';
+      } else {
+        objOffer.item_discount_percent = '';
+        objOffer.item_discount_rupee = item.item_discount_rupee;
+      }
+      this.offerList.push(objOffer);
+    });
   }
 }

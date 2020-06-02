@@ -38,10 +38,26 @@
                 name="select1"
                 class="form-control"
                 formControlName="subcategory_id"
+                *ngIf="allSubCategoryList.length === 1"
+              >
+                <option [value]="allSubCategoryList[0].subcategory_id" selected
+                  >No Sub Category available</option
+                >
+              </select>
+              <select
+                id="select1"
+                name="select1"
+                class="form-control"
+                formControlName="subcategory_id"
+                *ngIf="allSubCategoryList.length > 1"
               >
                 <option
-                  *ngFor="let category of allSubCategoryList | slice: 1"
+                  *ngFor="
+                    let category of allSubCategoryList | slice: 1;
+                    let i = index
+                  "
                   [value]="category.subcategory_id"
+                  [selected]="i === 0"
                 >
                   {{ category.subcategory_name }}</option
                 >
@@ -74,7 +90,7 @@
   </div>
 </div>
 
-<div class="row" *ngIf="!isEdit">
+<div class="row">
   <div class="col-sm-6 col-md-4" *ngFor="let item of allProductList">
     <div class="card card-accent-primary">
       <div class="card-header">
@@ -124,7 +140,7 @@
             <button
               type="button"
               class="btn btn-block btn-primary"
-              (click)="onProductEditClick()"
+              (click)="onProductEditClick(item)"
             >
               Edit
             </button>

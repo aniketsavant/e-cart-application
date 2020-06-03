@@ -11,12 +11,12 @@
       <div class="row mb-3">
         <div class="col-md-4">
           <button
-          type="button"
-          class="btn btn-block btn-warning"
-          (click)="openModelForOrderLimit.show()"
-        >
-          Set Order Limit
-        </button>
+            type="button"
+            class="btn btn-block btn-warning"
+            (click)="openModelForOrderLimit.show()"
+          >
+            Set Order Limit
+          </button>
         </div>
         <div class="col-md-4 offset-md-4">
           <div class="input-group">
@@ -31,7 +31,6 @@
             />
           </div>
         </div>
-       
       </div>
 
       <div class="mat-elevation-z8">
@@ -93,7 +92,9 @@
           <!-- Name Column -->
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let element">{{ element.status | titlecase }}</td>
+            <td mat-cell *matCellDef="let element">
+              {{ element.status | titlecase }}
+            </td>
           </ng-container>
 
           <!-- Name Column -->
@@ -241,11 +242,23 @@
       </div>
       <div class="modal-body">
         <!-- <p>One fine body&hellip;</p> -->
-        <li *ngFor="let list of selectedOrderList">
-          {{ list.product_name }} - {{ list.item_quantity
-          }}{{ list.item_unit }} * {{ list.item_quantity }} =
-          {{ list.item_quantity * list.item_quantity }}
-        </li>
+        <ol>
+          <li *ngFor="let list of selectedOrderList">
+            {{ list.product_name }} - {{ list.item_quantity }}/{{
+              list.item_unit | titlecase
+            }}
+            * {{ list.buy_quantity }} =
+            {{ list.item_quantity * list.buy_quantity }}/{{
+              list.item_unit | titlecase
+            }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <strong *ngIf="list.item_discount_price !== ''"
+              >[₹{{ list.item_discount_price * list.buy_quantity }}]</strong
+            >
+            <strong *ngIf="list.item_discount_price === ''"
+              >[₹{{ list.item_mrp * list.buy_quantity }}]</strong
+            >
+          </li>
+        </ol>
       </div>
       <div class="modal-footer">
         <button
@@ -263,12 +276,25 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-<div bsModal #openModelForOrderLimit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div
+  bsModal
+  #openModelForOrderLimit="bs-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-warning" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Set order limit on total amount:</h4>
-        <button type="button" class="close" (click)="openModelForOrderLimit.hide()" aria-label="Close">
+        <button
+          type="button"
+          class="close"
+          (click)="openModelForOrderLimit.hide()"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -287,9 +313,25 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="openModelForOrderLimit.hide()">Close</button>
-        <button type="button" class="btn btn-primary" *ngIf="selectedOrderLimit" (click)="setOrderLimit()">Save changes</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="openModelForOrderLimit.hide()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          *ngIf="selectedOrderLimit"
+          (click)="setOrderLimit()"
+        >
+          Save changes
+        </button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

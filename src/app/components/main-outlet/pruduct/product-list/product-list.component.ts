@@ -108,7 +108,7 @@ export class ProductListComponent implements OnInit {
   }
 
   onProductDeleteClick(product) {
-    if (confirm('Are you sure to delete ' + product.product_name)) {
+    if (confirm('No longer available for customer, are you sure to delete -' + product.product_name)) {
       const tempForProductId = {
         product_id: product.product_id,
       };

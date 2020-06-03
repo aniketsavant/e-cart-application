@@ -26,12 +26,12 @@ export class AddProductComponent implements OnInit {
   public urls = new Array<string>();
   public productForm: FormGroup;
   public offerList = [];
-  allCategoryList: any;
-  allSubCategoryList: any;
-  productQtyUnit = CONSTANT.FOR_PRODUCT_UNIT;
-  discountRateUnit = CONSTANT.FOR_DISCOUNT_UNIT;
+  public allCategoryList: any = [];
+  public allSubCategoryList: any = [];
+  public productQtyUnit = CONSTANT.FOR_PRODUCT_UNIT;
+  public discountRateUnit = CONSTANT.FOR_DISCOUNT_UNIT;
   public files = null;
-  productDetails: any;
+  public productDetails: any;
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
@@ -54,7 +54,7 @@ export class AddProductComponent implements OnInit {
       productPrice: ['', Validators.required],
       discountRate: [''],
       discountRateUnit: [''],
-      discountPrice: [{ value: '', disabled: true }],
+      discountPrice: [''],
       image: ['', Validators.required],
       offerList: [''],
     });
@@ -94,7 +94,6 @@ export class AddProductComponent implements OnInit {
 
   public onSaveChangesClick(): void {
     if (this.isEdit) {
-      this.closeForm.emit(true);
       this.editProductData();
     } else {
       this.addProductData();
@@ -152,6 +151,7 @@ export class AddProductComponent implements OnInit {
               this.productService.uploadImageCall(formData).subscribe(
                 (res) => {
                   this.productForm.reset();
+                  this.closeForm.emit(true);
                 },
                 (err) => {
                   this.toastr.error('Something wrong', 'Oops.!!');
@@ -167,27 +167,6 @@ export class AddProductComponent implements OnInit {
         }
       );
   }
-  // public onImagechange(event): void {
-  //   this.urls = [];
-  //   let files = event.target.files;
-  //   this.arrFiles = [];
-  //   if (files) {
-  //     for (let file of files) {
-  //       var mimeType = file.type;
-  //       if (mimeType.match(/image\/*/) == null) {
-  //         alert('Only images are supported.');
-  //         return;
-  //       } else {
-  //         this.arrFiles.push(file);
-  //         let reader = new FileReader();
-  //         reader.onload = (e: any) => {
-  //           this.urls.push(e.target.result);
-  //         };
-  //         reader.readAsDataURL(file);
-  //       }
-  //     }
-  //   }
-  // }
 
   public onImagechange(event): void {
     this.urls = [];
@@ -268,7 +247,14 @@ export class AddProductComponent implements OnInit {
   }
 
   onCategoryChange(idx) {
-    this.allSubCategoryList = this.allCategoryList[idx]?.subcategory;
+    this.allSubCategoryList = [];
+    if (this.allCategoryList[idx]?.subcategory.length > 1) {
+      this.allSubCategoryList = this.allCategoryList[idx]?.subcategory;
+    } else {
+      this.productForm.controls['productSubCategory'].patchValue(
+        this.allCategoryList[idx]?.subcategory[0].subcategory_id
+      );
+    }
   }
 
   public createAddProductPayload() {
@@ -336,5 +322,34 @@ export class AddProductComponent implements OnInit {
       }
       this.offerList.push(objOffer);
     });
+  }
+
+  get getSubmitButtonValidation() {
+    return (
+      this.productForm.controls['productCategory'].invalid ||
+      this.productForm.controls['productSubCategory'].invalid ||
+      this.productForm.controls['productName'].invalid ||
+      this.productForm.controls['productQuantity'].invalid ||
+      this.productForm.controls['productUnit'].invalid ||
+      this.productForm.controls['image'].invalid ||
+      this.offerList.length === 0
+    );
+  }
+
+  public calcuatediscountPrice(unitValue) {
+    if (unitValue === CONSTANT.FOR_DISCOUNT_UNIT[0].value) {
+      //Rs Selected
+      const result =
+        this.productForm.controls['productPrice'].value -
+        this.productForm.controls['discountRate'].value;
+      this.productForm.controls['discountPrice'].patchValue(result);
+    } else {
+      const result =
+        this.productForm.controls['productPrice'].value -
+        (this.productForm.controls['productPrice'].value *
+          this.productForm.controls['discountRate'].value) /
+          100;
+      this.productForm.controls['discountPrice'].patchValue(result);
+    }
   }
 }

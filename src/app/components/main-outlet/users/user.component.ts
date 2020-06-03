@@ -27,8 +27,8 @@ export class UserComponent implements OnInit {
     'role',
     'status',
   ];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource();
-
+  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  public userListForDeletUser: any = [];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -44,7 +44,8 @@ export class UserComponent implements OnInit {
   private getUserList(): void {
     this.usersService.getUserList().subscribe((res: UserList[]) => {
       if (res.length > 0) {
-        this.dataSource = new MatTableDataSource(res);
+        this.userListForDeletUser = res;
+        this.dataSource = new MatTableDataSource(this.userListForDeletUser);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       } else {
@@ -67,12 +68,23 @@ export class UserComponent implements OnInit {
   }
 
   public onDeletClick(value): void {
-    if (confirm('Are you sure to delete customer: ' + value.full_name)) {
+    if (
+      confirm(
+        'Orders related to this user will also deleted, if have any. Are you sure to delete user : ' +
+          value.full_name
+      )
+    ) {
       const userDeletPayload = {
         user_id: value.user_id,
       };
       this.usersService.deleteUser(userDeletPayload).subscribe((res) => {
         if (res.status === 'Ok') {
+          this.userListForDeletUser = this.userListForDeletUser.filter(
+            ({ user_id }) => user_id !== value.user_id
+          );
+          this.dataSource = new MatTableDataSource(this.userListForDeletUser);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
           this.toastr.success('User deleted successfully..', 'Done.!!');
         } else {
           this.toastr.success(res.message, 'Oops.!!');

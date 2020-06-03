@@ -37,8 +37,7 @@ export class ProductService {
     return this.http
       .post<any>(
         `${environment.BASE_URL}${MAIN_URL_CONSTANTS.UPLOAD_IMAGE}`,
-        requestPayload,
-        httpOptions
+        requestPayload
       )
       .pipe(catchError(this.handleError));
   }

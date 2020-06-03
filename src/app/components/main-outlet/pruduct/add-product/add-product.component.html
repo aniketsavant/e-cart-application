@@ -44,7 +44,7 @@
               </div>
             </div>
             <div class="col-6">
-              <div class="form-group">
+              <div class="form-group" *ngIf="allSubCategoryList.length > 1">
                 <label for="company"
                   >Product Sub Category<span class="text-danger"
                     >&nbsp;*</span
@@ -144,10 +144,12 @@
                       class="form-control"
                       formControlName="productUnit"
                     >
-                      <option value="">Select Unit</option>
-                      <option value="Kg">Kilogram</option>
-                      <option value="Packat">Packat</option>
-                      <option value="Ltr">Liter</option>
+                    <option value="">Select Unit</option>
+                    <option
+                      [value]="item.value"
+                      *ngFor="let item of productQtyUnit"
+                      >{{ item.label }}</option
+                    >
                     </select>
                     <div
                       *ngIf="
@@ -339,6 +341,7 @@
                       name="City"
                       class="form-control"
                       formControlName="discountRateUnit"
+                      (change) = "calcuatediscountPrice($event.target.value)"
                     >
                       <option value="">Select Unit</option>
                       <option
@@ -358,6 +361,7 @@
                   type="text"
                   class="form-control"
                   id="category_name"
+                  disabled
                   placeholder=" Discount Price"
                   formControlName="discountPrice"
                 />
@@ -412,15 +416,7 @@
                 type="button"
                 [ngClass]="setProductValue.saveButtonClass"
                 (click)="onSaveChangesClick()"
-                [disabled]="
-                  this.productForm.controls['productCategory'].invalid ||
-                  this.productForm.controls['productSubCategory'].invalid ||
-                  this.productForm.controls['productName'].invalid ||
-                  this.productForm.controls['productQuantity'].invalid ||
-                  this.productForm.controls['productUnit'].invalid ||
-                  this.productForm.controls['image'].invalid ||
-                  this.offerList.length === 0
-                "
+                [disabled]="getSubmitButtonValidation"
               >
                 {{ setProductValue.saveButtonName }}
               </button>

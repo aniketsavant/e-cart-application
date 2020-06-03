@@ -41,16 +41,18 @@ export const CONSTANT = {
     saveButtonClass: 'btn btn-block btn-primary',
     cardHeaderName: 'Edit product',
   },
+  //Dont change in future the calculation is depend on that array
   FOR_DISCOUNT_UNIT: [
     {
       label: 'Price(Rupee)',
-      value: 'Rupee',
+      value: 'Rs',
     },
     {
       label: 'Percentage(%)',
-      value: 'Percentage',
+      value: '%',
     },
   ],
+  
   FOR_PRODUCT_UNIT: [
     {
       label: 'Kilogram',

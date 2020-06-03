@@ -338,7 +338,12 @@ export class CatogoriesComponent implements OnInit {
   }
 
   public onDeleteCategoryClick(cat): void {
-    if (confirm('Are you sure to delete ' + cat.category_name)) {
+    if (
+      confirm(
+        'Sub category and products related to this category will also deleted, if have any. Are you sure to delete -' +
+          cat.category_name
+      )
+    ) {
       // this.ngxLoader.start();
       let params = { category_id: cat.category_id };
       console.log(params);
@@ -363,7 +368,12 @@ export class CatogoriesComponent implements OnInit {
   }
 
   public onDeleteSubCategoryClick(subCat): void {
-    if (confirm('Are you sure to delete ' + subCat.subcategory_name)) {
+    if (
+      confirm(
+        'Products related to this sub category will also deleted, if have any. Are you sure to delete ' +
+          subCat.subcategory_name
+      )
+    ) {
       // this.ngxLoader.start();
       let params = { subcategory_id: subCat?.subcategory_id };
       console.log(params);

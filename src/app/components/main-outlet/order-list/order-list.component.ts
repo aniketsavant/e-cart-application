@@ -70,8 +70,6 @@ export class OrderListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
     this.getAllOrderList();
     this.getOrderLimit();
   }
@@ -80,6 +78,8 @@ export class OrderListComponent implements OnInit {
     this.orderService.getAllOrder().subscribe((res) => {
       if (res) {
         this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       } else {
         this.toastr.error('Somthing went wrong', 'Oops.!!');
       }

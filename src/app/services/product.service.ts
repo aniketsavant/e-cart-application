@@ -10,7 +10,6 @@ import { httpOptions } from '../constants/httpHeaders';
   providedIn: 'root',
 })
 export class ProductService {
-  productData: any;
   constructor(private http: HttpClient) {}
 
   public addProductCall(requestPayload: any): Observable<any> {
@@ -69,13 +68,6 @@ export class ProductService {
       .pipe(catchError(this.handleError));
   }
 
-  public saveProductDetails(data) {
-    this.productData = data;
-  }
-
-  public getProductDetails() {
-    return this.productData;
-  }
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

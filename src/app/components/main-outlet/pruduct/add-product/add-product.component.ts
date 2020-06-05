@@ -17,6 +17,7 @@ export function getAlertConfig(): AlertConfig {
 })
 export class AddProductComponent implements OnInit {
   @Input('isEdit') public isEdit: boolean = false;
+  @Input('productDetails') public productDetails: any;
   @Output('closeForm') public closeForm: EventEmitter<any> = new EventEmitter();
   public setProductValue: any = {
     saveButtonName: '',
@@ -31,7 +32,8 @@ export class AddProductComponent implements OnInit {
   public productQtyUnit = CONSTANT.FOR_PRODUCT_UNIT;
   public discountRateUnit = CONSTANT.FOR_DISCOUNT_UNIT;
   public files = null;
-  public productDetails: any;
+  public offerEdit: boolean = false;
+  public editOfferItemId: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private productService: ProductService,
@@ -64,17 +66,15 @@ export class AddProductComponent implements OnInit {
       : CONSTANT.FOR_PRODUCT_SAVE;
 
     this.getAllCategory();
-
-    if (this.isEdit) {
-      this.productDetails = this.productService.getProductDetails();
-      this.patchProductData(this.productDetails);
-    }
   }
 
   getAllCategory() {
     this.categoryService.getAllCategoryListCall().subscribe((res) => {
       if (res.status === 'Ok') {
         this.allCategoryList = res.data;
+        if (this.isEdit && this.allCategoryList.length !== 0) {
+          this.patchProductData(this.productDetails);
+        }
       } else {
         this.toastr.error('Somthing wrong', 'Oops.!!');
       }
@@ -116,6 +116,8 @@ export class AddProductComponent implements OnInit {
             this.productService.uploadImageCall(formData).subscribe(
               (res) => {
                 this.productForm.reset();
+                this.toastr.success('Product Added Successfullt.', 'Done.!!');
+                this.closeForm.emit(true);
               },
               (err) => {
                 this.toastr.error('Something wrong', 'Oops.!!');
@@ -151,12 +153,20 @@ export class AddProductComponent implements OnInit {
               this.productService.uploadImageCall(formData).subscribe(
                 (res) => {
                   this.productForm.reset();
+                  this.toastr.success(
+                    'Product Updated Successfullt.',
+                    'Done.!!'
+                  );
                   this.closeForm.emit(true);
                 },
                 (err) => {
                   this.toastr.error('Something wrong', 'Oops.!!');
                 }
               );
+            } else {
+              this.productForm.reset();
+              this.toastr.success('Product Updated Successfullt.', 'Done.!!');
+              this.closeForm.emit(true);
             }
           } else {
             this.toastr.error('Something wrong', 'Oops.!!');
@@ -188,7 +198,31 @@ export class AddProductComponent implements OnInit {
   }
 
   public onAddOffer() {
-    this.createOfferListArray();
+    if (this.offerEdit) {
+      this.offerList.forEach((ele) => {
+        if (ele.item_id === this.editOfferItemId) {
+          (ele.offer_name = this.productForm.get('offerName').value),
+            (ele.item_quantity = String(
+              this.productForm.get('offerProductQuantity').value
+            )),
+            (ele.item_unit = this.productForm.get('offerProductUnit').value),
+            (ele.item_mrp = String(this.productForm.get('productPrice').value)),
+            (ele.item_discount_price = String(
+              this.productForm.get('discountPrice').value
+            )),
+            (ele.item_discount_percent =
+              this.productForm.get('discountRateUnit').value === '%'
+                ? String(this.productForm.get('discountRate').value)
+                : ''),
+            (ele.item_discount_rupee =
+              this.productForm.get('discountRateUnit').value === 'Rs'
+                ? String(this.productForm.get('discountRate').value)
+                : '');
+        }
+      });
+    } else {
+      this.createOfferListArray();
+    }
     [
       'offerName',
       'offerProductQuantity',
@@ -216,27 +250,23 @@ export class AddProductComponent implements OnInit {
     ) {
       let objOffer = {
         offer_name: this.productForm.get('offerName').value,
-        item_quantity: this.productForm.get('offerProductQuantity').value,
+        item_quantity: String(
+          this.productForm.get('offerProductQuantity').value
+        ),
         item_unit: this.productForm.get('offerProductUnit').value,
-        // productPrice: this.productForm.get('productPrice').value,
-        // discountRate: this.productForm.get('discountRate').value,
-        // discountRateUnit: this.productForm.get('discountRateUnit').value,
-        item_discount_price: this.productForm.get('discountPrice').value,
-        item_discount_unit: this.productForm.get('discountRateUnit').value,
-        item_discount_percent: '',
-        item_discount_rupee: '',
+        item_mrp: String(this.productForm.get('productPrice').value),
+        item_discount_price: String(
+          this.productForm.get('discountPrice').value
+        ),
+        item_discount_percent:
+          this.productForm.get('discountRateUnit').value === '%'
+            ? String(this.productForm.get('discountRate').value)
+            : '',
+        item_discount_rupee:
+          this.productForm.get('discountRateUnit').value === 'Rs'
+            ? String(this.productForm.get('discountRate').value)
+            : '',
       };
-      if (this.productForm.get('discountRateUnit').value === 'Percentage') {
-        objOffer.item_discount_percent = this.productForm.get(
-          'discountRate'
-        ).value;
-        objOffer.item_discount_rupee = '';
-      } else {
-        objOffer.item_discount_percent = '';
-        objOffer.item_discount_rupee = this.productForm.get(
-          'discountRate'
-        ).value;
-      }
       this.offerList.push(objOffer);
     }
   }
@@ -284,11 +314,25 @@ export class AddProductComponent implements OnInit {
   }
 
   patchProductData(data) {
+    this.allCategoryList.every((cat, i) => {
+      cat.subcategory.every((subcat, i) => {
+        if (subcat.subcategory_id === data.subcategory_id) {
+          this.productForm.controls['productCategory'].patchValue(i);
+          this.allSubCategoryList = cat.subcategory;
+          this.productForm.controls['productSubCategory'].patchValue(
+            data.subcategory_id
+          );
+          return false;
+        }
+        return true;
+      });
+      return this.productForm.controls['productCategory'].value === ''
+        ? true
+        : false;
+    });
+
     this.productForm.controls['productId'].patchValue(data.product_id);
-    this.productForm.controls['productCategory'].patchValue('');
-    this.productForm.controls['productSubCategory'].patchValue(
-      data.subcategory_id
-    );
+
     this.productForm.controls['productName'].patchValue(data.product_name);
     this.productForm.controls['productDescription'].patchValue(
       data.product_description
@@ -301,27 +345,27 @@ export class AddProductComponent implements OnInit {
     );
     this.productForm.controls['image'].clearValidators();
     this.productForm.controls['image'].updateValueAndValidity();
-    this.urls.push(data.product_files);
+    this.urls.push(data.product_image);
 
-    data.product_sales.map((item, index) => {
-      let objOffer = {
-        offer_name: item.offer_name,
-        item_quantity: item.item_quantity,
-        item_unit: item.item_unit,
-        item_discount_price: item.item_discount_price,
-        item_discount_unit: item.item_discount_unit,
-        item_discount_percent: '',
-        item_discount_rupee: '',
-      };
-      if (item.item_discount_percent !== '') {
-        objOffer.item_discount_percent = item.item_discount_percent;
-        objOffer.item_discount_rupee = '';
-      } else {
-        objOffer.item_discount_percent = '';
-        objOffer.item_discount_rupee = item.item_discount_rupee;
-      }
-      this.offerList.push(objOffer);
-    });
+    // data.product_sales.map((item, index) => {
+    //   let objOffer = {
+    //     offer_name: item.offer_name,
+    //     item_quantity: item.item_quantity,
+    //     item_unit: item.item_unit,
+    //     item_discount_price: item.item_discount_price,
+    //     item_discount_unit: item.item_discount_unit,
+    //     item_discount_percent: '',
+    //     item_discount_rupee: '',
+    //   };
+    //   if (item.item_discount_percent !== '') {
+    //     objOffer.item_discount_percent = item.item_discount_percent;
+    //     objOffer.item_discount_rupee = '';
+    //   } else {
+    //     objOffer.item_discount_percent = '';
+    //     objOffer.item_discount_rupee = item.item_discount_rupee;
+    //   }
+    // });
+    this.offerList = data.product_sales;
   }
 
   get getSubmitButtonValidation() {
@@ -336,8 +380,11 @@ export class AddProductComponent implements OnInit {
     );
   }
 
-  public calcuatediscountPrice(unitValue) {
-    if (unitValue === CONSTANT.FOR_DISCOUNT_UNIT[0].value) {
+  public calcuatediscountPrice() {
+    if (
+      this.productForm.controls['discountRateUnit'].value ===
+      CONSTANT.FOR_DISCOUNT_UNIT[0].value
+    ) {
       //Rs Selected
       const result =
         this.productForm.controls['productPrice'].value -
@@ -351,5 +398,22 @@ export class AddProductComponent implements OnInit {
           100;
       this.productForm.controls['discountPrice'].patchValue(result);
     }
+  }
+
+  public onOfferChangeDetailsClick(item): void {
+    this.offerEdit = true;
+    this.editOfferItemId = item.item_id;
+    this.productForm.patchValue({
+      offerName: item.offer_name,
+      offerProductQuantity: item.item_quantity,
+      offerProductUnit: item.item_unit,
+      productPrice: item.item_mrp,
+      discountRate: item.item_discount_price,
+      discountRateUnit: item.item_discount_percent !== '' ? '%' : 'Rs',
+      discountPrice:
+        item.item_discount_percent !== ''
+          ? item.item_discount_percent
+          : item.item_discount_rupee,
+    });
   }
 }

@@ -19,6 +19,7 @@ export class ProductListComponent implements OnInit {
   public allCategoryList: any = [];
   public allSubCategoryList: any = [];
   public allProductList: any = [];
+  public selectedProductDataForEdit: any;
 
   constructor(
     private categoryService: CategoryService,
@@ -69,7 +70,8 @@ export class ProductListComponent implements OnInit {
 
   public onProductEditClick(productData): void {
     this.isEdit = true;
-    this.productService.saveProductDetails(productData);
+    this.allProductList = [];
+    this.selectedProductDataForEdit = productData;
   }
 
   public closeFormCheck(value: boolean): void {
@@ -108,7 +110,12 @@ export class ProductListComponent implements OnInit {
   }
 
   onProductDeleteClick(product) {
-    if (confirm('No longer available for customer, are you sure to delete -' + product.product_name)) {
+    if (
+      confirm(
+        'No longer available for customer, are you sure to delete -' +
+          product.product_name
+      )
+    ) {
       const tempForProductId = {
         product_id: product.product_id,
       };

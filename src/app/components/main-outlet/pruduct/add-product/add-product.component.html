@@ -144,12 +144,12 @@
                       class="form-control"
                       formControlName="productUnit"
                     >
-                    <option value="">Select Unit</option>
-                    <option
-                      [value]="item.value"
-                      *ngFor="let item of productQtyUnit"
-                      >{{ item.label }}</option
-                    >
+                      <option value="">Select Unit</option>
+                      <option
+                        [value]="item.value"
+                        *ngFor="let item of productQtyUnit"
+                        >{{ item.label }}</option
+                      >
                     </select>
                     <div
                       *ngIf="
@@ -304,6 +304,7 @@
                   id="category_name"
                   placeholder="Enter product price"
                   formControlName="productPrice"
+                  (keyup)="calcuatediscountPrice()"
                 />
                 <div
                   *ngIf="
@@ -333,6 +334,7 @@
                       id="category_name"
                       placeholder="Enter discount rate"
                       formControlName="discountRate"
+                      (keyup)="calcuatediscountPrice()"
                     />
                   </div>
                   <div class="col-4">
@@ -341,7 +343,7 @@
                       name="City"
                       class="form-control"
                       formControlName="discountRateUnit"
-                      (change) = "calcuatediscountPrice($event.target.value)"
+                      (change)="calcuatediscountPrice()"
                     >
                       <option value="">Select Unit</option>
                       <option
@@ -383,15 +385,17 @@
               </button>
             </div>
           </div>
-          <label><strong>Added Offer List (Manage Offers).</strong></label>
+          <label *ngIf="offerList.length > 0"
+            ><strong>Added Offer List (Manage Offers).</strong></label
+          >
           <div class="row" *ngIf="offerList.length > 0">
             <div class="col-4" *ngFor="let item of offerList; let i = index">
               <alert type="info">
                 <div class="row">
-                  <div class="col-10">
+                  <div class="col-10" (click)="onOfferChangeDetailsClick(item)">
                     {{ item.item_discount_percent || item.item_discount_rupee
-                    }}{{
-                      item.item_discount_percent !== "" ? "%" : "Rupee"
+                    }} {{
+                      item.item_discount_percent !== "" ? "%" : "₹"
                     }}
                     Discount on {{ item.item_quantity }}/{{ item.item_unit }}
                   </div>

@@ -78,7 +78,7 @@
   </div>
 </div>
 
-<div class="row" *ngIf="allProductList.length > 0">
+<div class="row" *ngIf="allProductList.length > 0 && !isEdit">
   <div
     class="col-sm-6 col-md-4"
     *ngFor="let item of allProductList; let i = index"
@@ -147,9 +147,10 @@
     </div>
   </div>
 </div>
-
+<label *ngIf="isEdit"> <strong>Product</strong>: {{selectedProductDataForEdit.product_name}} </label>
 <app-add-product
   *ngIf="isEdit"
   [isEdit]="isEdit"
+  [productDetails] = "selectedProductDataForEdit"
   (closeForm)="closeFormCheck($event)"
 ></app-add-product>

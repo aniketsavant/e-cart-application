@@ -48,6 +48,7 @@ export class CatogoriesComponent implements OnInit {
   public isEditForm = false;
   public subCategoryList: any;
   public selectedCategoryId: string;
+  public selectedCatName: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -328,6 +329,7 @@ export class CatogoriesComponent implements OnInit {
         'NO DATA..!!'
       );
     } else {
+      this.selectedCatName = this.allCategoryList[idx].category_name;
       this.selectedCategoryId = this.allCategoryList[idx].category_id;
       const tempForsubCatList = this.allCategoryList[idx].subcategory;
       this.subCategoryList = tempForsubCatList.filter(

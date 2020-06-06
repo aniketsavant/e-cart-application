@@ -116,6 +116,8 @@ export class AddProductComponent implements OnInit {
             this.productService.uploadImageCall(formData).subscribe(
               (res) => {
                 this.productForm.reset();
+                this.offerList =[];
+                this.urls = [];
                 this.toastr.success('Product Added Successfullt.', 'Done.!!');
                 this.closeForm.emit(true);
               },

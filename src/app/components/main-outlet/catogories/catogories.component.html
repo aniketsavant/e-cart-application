@@ -59,7 +59,7 @@
   </div>
 </div>
 
-<h2>{{ isSubCategoryShow ? "Sub " : "" }}Category list {{ isSubCategoryShow ? "of " : "" }}{{ isSubCategoryShow ? subCategoryList.category_name : "" }}:</h2>
+<h2>{{ isSubCategoryShow ? "Sub " : "" }}Category list {{ isSubCategoryShow ? "of " : "" }}{{ isSubCategoryShow ? selectedCatName : "" }}:</h2>
 <!-- <h2>Sub category list of Capsicum:</h2> -->
 <div class="row" *ngIf="!isSubCategoryShow">
   <!-- main category list -->

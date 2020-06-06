@@ -44,8 +44,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
         re_password: ['', Validators.required],
         full_address: ['', Validators.required],
         city: ['', Validators.required],
-        state:[''],
-        country:[''],
+        state:['Maharashtra'],
+        country:['India'],
         landmark: [''],
         role:['ADMIN']
       },

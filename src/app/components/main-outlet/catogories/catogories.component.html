@@ -41,8 +41,10 @@
           <input
             class="form-control"
             placeholder="Type to search category"
+            #myInput
+            [(ngModel)]="searchValue"
             type="text"
-            (keyup)="applyFilter($event.target.value)"
+            (input)="applyFilter(myInput.value)"
           />
         </div>
       </div>
@@ -65,10 +67,10 @@
   <!-- main category list -->
   <div
     class="col-sm-6 col-md-4"
-    *ngFor="let cat of allCategoryList; let i = index"
+    *ngFor="let cat of filteredCatCopy; let i = index"
   >
     <div class="card card-accent-primary">
-      <a (click)="onMainCategoryClick(i)" class="categories">
+      <a (click)="onMainCategoryClick(cat)" class="categories">
         <div class="card-header">
           <strong>{{ cat.category_name }}</strong>
         </div>
@@ -110,7 +112,7 @@
     *ngFor="let cat of subCategoryList; let i = index"
   >
     <div class="card card-accent-primary" [hidden]="cat.status ==='0'">
-      <a (click)="onMainCategoryClick(i)" class="categories">
+      <a class="categories">
         <div class="card-header">
           <strong>{{ cat.subcategory_name }}</strong>
         </div>

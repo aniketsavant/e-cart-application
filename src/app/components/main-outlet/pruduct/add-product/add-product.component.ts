@@ -55,6 +55,7 @@ export class AddProductComponent implements OnInit {
       offerProductUnit: ['', Validators.required],
       productPrice: ['', Validators.required],
       discountRate: [''],
+      max_quantity: ['1'],
       discountRateUnit: [''],
       discountPrice: [''],
       image: ['', Validators.required],
@@ -116,7 +117,14 @@ export class AddProductComponent implements OnInit {
             this.productService.uploadImageCall(formData).subscribe(
               (res) => {
                 this.productForm.reset();
-                this.offerList =[];
+                this.productForm.patchValue({
+                  productCategory: '',
+                  productSubCategory: '',
+                  productUnit: '',
+                  offerProductUnit: '',
+                  discountRateUnit: '',
+                });
+                this.offerList = [];
                 this.urls = [];
                 this.toastr.success('Product Added Successfullt.', 'Done.!!');
                 this.closeForm.emit(true);
@@ -209,6 +217,9 @@ export class AddProductComponent implements OnInit {
             )),
             (ele.item_unit = this.productForm.get('offerProductUnit').value),
             (ele.item_mrp = String(this.productForm.get('productPrice').value)),
+            (ele.max_quantity = String(
+              this.productForm.get('max_quantity').value
+            )),
             (ele.item_discount_price = String(
               this.productForm.get('discountPrice').value
             )),
@@ -222,26 +233,10 @@ export class AddProductComponent implements OnInit {
                 : '');
         }
       });
+      this.clearOfferValue();
     } else {
       this.createOfferListArray();
     }
-    [
-      'offerName',
-      'offerProductQuantity',
-      'productPrice',
-      'discountRate',
-      'discountPrice',
-    ].map((item) => {
-      this.productForm.controls[item].reset();
-    });
-
-    this.productForm.controls['offerProductUnit'].patchValue('');
-    this.productForm.controls['discountRateUnit'].patchValue('');
-    this.productForm.controls['offerProductUnit'].clearValidators();
-    this.productForm.controls['discountRateUnit'].clearValidators();
-    this.productForm.controls['offerProductUnit'].updateValueAndValidity();
-    this.productForm.controls['discountRateUnit'].updateValueAndValidity();
-    this.productForm.controls['offerList'].patchValue(this.offerList);
   }
 
   createOfferListArray() {
@@ -251,12 +246,16 @@ export class AddProductComponent implements OnInit {
       this.productForm.controls['offerProductUnit'].valid
     ) {
       let objOffer = {
-        offer_name: this.productForm.get('offerName').value,
+        offer_name:
+          this.productForm.get('offerName').value === null
+            ? ''
+            : String(this.productForm.get('offerName').value),
         item_quantity: String(
           this.productForm.get('offerProductQuantity').value
         ),
         item_unit: this.productForm.get('offerProductUnit').value,
         item_mrp: String(this.productForm.get('productPrice').value),
+        max_quantity: String(this.productForm.get('max_quantity').value),
         item_discount_price: String(
           this.productForm.get('discountPrice').value
         ),
@@ -270,7 +269,19 @@ export class AddProductComponent implements OnInit {
             : '',
       };
       this.offerList.push(objOffer);
+      this.clearOfferValue();
     }
+  }
+
+  public clearOfferValue(): void {
+    this.productForm.patchValue({
+      offerName: '',
+      offerProductQuantity: '',
+      productPrice: '',
+      discountRate: '',
+      discountPrice: '',
+      max_quantity: '',
+    });
   }
 
   public onRemoveOffer(idx) {
@@ -295,7 +306,10 @@ export class AddProductComponent implements OnInit {
       params = {
         product_name: this.productForm.get('productName').value,
         subcategory_id: this.productForm.get('productSubCategory').value,
-        product_description: this.productForm.get('productDescription').value,
+        product_description:
+          this.productForm.get('productDescription').value === null
+            ? ''
+            : String(this.productForm.get('productDescription').value),
         product_total_quantity: this.productForm.get('productQuantity').value,
         product_total_quantity_unit: this.productForm.get('productUnit').value,
         productSales: this.offerList,
@@ -348,25 +362,6 @@ export class AddProductComponent implements OnInit {
     this.productForm.controls['image'].clearValidators();
     this.productForm.controls['image'].updateValueAndValidity();
     this.urls.push(data.product_image);
-
-    // data.product_sales.map((item, index) => {
-    //   let objOffer = {
-    //     offer_name: item.offer_name,
-    //     item_quantity: item.item_quantity,
-    //     item_unit: item.item_unit,
-    //     item_discount_price: item.item_discount_price,
-    //     item_discount_unit: item.item_discount_unit,
-    //     item_discount_percent: '',
-    //     item_discount_rupee: '',
-    //   };
-    //   if (item.item_discount_percent !== '') {
-    //     objOffer.item_discount_percent = item.item_discount_percent;
-    //     objOffer.item_discount_rupee = '';
-    //   } else {
-    //     objOffer.item_discount_percent = '';
-    //     objOffer.item_discount_rupee = item.item_discount_rupee;
-    //   }
-    // });
     this.offerList = data.product_sales;
   }
 
@@ -410,9 +405,15 @@ export class AddProductComponent implements OnInit {
       offerProductQuantity: item.item_quantity,
       offerProductUnit: item.item_unit,
       productPrice: item.item_mrp,
-      discountRate: item.item_discount_price,
-      discountRateUnit: item.item_discount_percent !== '' ? '%' : 'Rs',
-      discountPrice:
+      max_quantity: item.max_quantity,
+      discountPrice: item.item_discount_price,
+      discountRateUnit:
+        item.item_discount_percent === '' && item.item_discount_rupee === ''
+          ? ''
+          : item.item_discount_percent !== ''
+          ? '%'
+          : 'Rs',
+      discountRate:
         item.item_discount_percent !== ''
           ? item.item_discount_percent
           : item.item_discount_rupee,

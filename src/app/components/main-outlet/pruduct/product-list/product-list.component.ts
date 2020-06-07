@@ -19,7 +19,9 @@ export class ProductListComponent implements OnInit {
   public allCategoryList: any = [];
   public allSubCategoryList: any = [];
   public allProductList: any = [];
+  public filteredAllProductList: any = [];
   public selectedProductDataForEdit: any;
+  public searchValue: string = '';
 
   constructor(
     private categoryService: CategoryService,
@@ -44,7 +46,10 @@ export class ProductListComponent implements OnInit {
       };
   }
 
-  public onAvailableCheckboxChange(productValue, i): void {
+  public onAvailableCheckboxChange(productValue): void {
+    const index = this.allProductList.findIndex(
+      (x) => x.product_id === productValue.product_id
+    );
     const tempPayloadForChangeOrderStatus = {
       product_id: productValue.product_id,
       status: productValue.status === '1' ? '0' : '1',
@@ -57,7 +62,7 @@ export class ProductListComponent implements OnInit {
             'Status changed for ' + productValue.product_name,
             'Done.!!'
           );
-          this.allProductList[i].status =
+          this.allProductList[index].status =
             productValue.status === '1' ? '0' : '1';
         } else {
           this.toastr.error('Try again later', 'Oops.!!');
@@ -71,6 +76,7 @@ export class ProductListComponent implements OnInit {
   public onProductEditClick(productData): void {
     this.isEdit = true;
     this.allProductList = [];
+    this.assignProductListCopy();
     this.selectedProductDataForEdit = productData;
   }
 
@@ -84,8 +90,10 @@ export class ProductListComponent implements OnInit {
       const formData = new FormData();
       formData.append('subcategory_id', subcategory_id);
       this.productService.getAllProductsCall(formData).subscribe((res) => {
-        if (res[0].status !== 'error') this.allProductList = res;
-        else
+        if (res[0].status !== 'error') {
+          this.allProductList = res;
+          this.assignProductListCopy();
+        } else
           this.toastr.error(
             'Product not available for this categrory',
             'Oops..!!'
@@ -99,6 +107,7 @@ export class ProductListComponent implements OnInit {
 
   onCategoryChange(idx) {
     this.allProductList = [];
+    this.assignProductListCopy();
     this.allSubCategoryList =
       idx === '0'
         ? []
@@ -125,6 +134,7 @@ export class ProductListComponent implements OnInit {
           this.allProductList = this.allProductList.filter(
             ({ product_id }) => product_id !== product.product_id
           );
+          this.assignProductListCopy();
         } else {
           this.toastr.error('try again lalter', 'Oops.!!');
         }
@@ -133,5 +143,19 @@ export class ProductListComponent implements OnInit {
           this.toastr.error('Somthing went wrong', 'Oops.!!');
         };
     }
+  }
+
+  public applyFilter(value: string): void {
+    if (!value) {
+      this.assignProductListCopy();
+    }
+    this.filteredAllProductList = Object.assign([], this.allProductList).filter(
+      (item) =>
+        item.product_name.toLowerCase().indexOf(value.toLowerCase()) > -1
+    );
+  }
+
+  assignProductListCopy(): void {
+    this.filteredAllProductList = Object.assign([], this.allProductList);
   }
 }

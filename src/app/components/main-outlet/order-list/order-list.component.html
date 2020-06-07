@@ -60,7 +60,9 @@
           <ng-container matColumnDef="phone">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone N.</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.Users?.phone }}
+              (P){{ element.Users?.phone }}<br />{{
+                element.Users?.alternate_phone !== "" ? "(A)" : ""
+              }}{{ element.Users?.alternate_phone }}
             </td>
           </ng-container>
 
@@ -226,11 +228,25 @@
   role="dialog"
   aria-labelledby="myModalLabel"
   aria-hidden="true"
+  id="contentToConvert"
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Order list :</h4>
+        <h4 class="modal-title">
+          <strong>Name:</strong> {{ selectedOrder?.Users?.full_name }}<br />
+          <strong>Phone Number:</strong> {{ selectedOrder?.Users?.phone }}/{{
+            selectedOrder?.Users?.alternate_phone
+          }}<br />
+          <strong>Address:</strong> {{ selectedOrder?.Users?.full_address }},
+          {{ selectedOrder?.Users?.landmark }}, {{ selectedOrder?.Users?.city
+          }}<br />
+          <strong>Date:</strong> {{ selectedOrder?.order_date | date }}<br/>
+          <strong>Total Amount:</strong> ₹{{ selectedOrder?.total_amount }}/-
+        </h4>
+        <button type="button" class="btn btn-primary downloadButton" (click)="convetToPDF()">
+          Download
+        </button>
         <button
           type="button"
           class="close"
@@ -242,8 +258,8 @@
       </div>
       <div class="modal-body">
         <!-- <p>One fine body&hellip;</p> -->
-        <ol>
-          <li *ngFor="let list of selectedOrderList">
+        <!-- <ol> -->
+          <!-- <li *ngFor="let list of selectedOrder?.orderList; let i = index">
             {{ list.product_name }} - {{ list.item_quantity }}/{{
               list.item_unit | titlecase
             }}
@@ -257,8 +273,38 @@
             <strong *ngIf="list.item_discount_price === ''"
               >[₹{{ list.item_mrp * list.buy_quantity }}]</strong
             >
-          </li>
-        </ol>
+          </li> -->
+
+          <table>
+            <tr>
+              <th>Sr No.</th>
+              <th>Product Name</th>
+              <th>Product Quantity</th>
+              <th>Purchase Quantity</th>
+              <th>Total Qauantity</th>
+              <th>Product Amount</th>
+            </tr>
+            <tr *ngFor="let list of selectedOrder?.orderList; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ list.product_name }}</td>
+              <td>{{ list.item_quantity }}/{{ list.item_unit | titlecase }}</td>
+              <td>{{ list.buy_quantity }}</td>
+              <td>
+                {{ list.item_quantity * list.buy_quantity }}/{{
+                  list.item_unit | titlecase
+                }}
+              </td>
+              <td>
+                <strong *ngIf="list.item_discount_price !== ''"
+                  >[₹{{ list.item_discount_price * list.buy_quantity }}]</strong
+                >
+                <strong *ngIf="list.item_discount_price === ''"
+                  >[₹{{ list.item_mrp * list.buy_quantity }}]</strong
+                >
+              </td>
+            </tr>
+          </table>
+        <!-- </ol> -->
       </div>
       <div class="modal-footer">
         <button
@@ -268,7 +314,6 @@
         >
           Close
         </button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
     <!-- /.modal-content -->

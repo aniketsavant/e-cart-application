@@ -42,13 +42,16 @@ export class CatogoriesComponent implements OnInit {
   public addMainCategoryForm: FormGroup;
   public addSubCategoryForm: FormGroup;
   public allCategoryList: Category[] = [];
+  public filteredCatCopy: Category[] = [];
   public isSubCategoryShow = false;
   public arrSubCategoryList: SubCategory[];
   public editMainCategory: any;
   public isEditForm = false;
   public subCategoryList: any;
+  public filteredSubCategoryList: any;
   public selectedCategoryId: string;
   public selectedCatName: string = '';
+  public searchValue: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -83,6 +86,7 @@ export class CatogoriesComponent implements OnInit {
       .subscribe((res: GetCategoryList) => {
         if (res.status === 'Ok') {
           this.allCategoryList = res.data;
+          this.assignCatCopy();
           this.ngxLoader.stop();
         } else {
           this.toastr.error('Somthing wrong', 'Oops.!!');
@@ -322,19 +326,23 @@ export class CatogoriesComponent implements OnInit {
     return formData;
   }
 
-  public onMainCategoryClick(idx) {
-    if (this.allCategoryList[idx]?.subcategory.length === 1) {
+  public onMainCategoryClick(category) {
+    const index = this.allCategoryList.findIndex(
+      (x) => x.category_id === category.category_id
+    );
+    if (this.allCategoryList[index]?.subcategory.length === 1) {
       this.toastr.error(
         'No sub category available for this category',
         'NO DATA..!!'
       );
     } else {
-      this.selectedCatName = this.allCategoryList[idx].category_name;
-      this.selectedCategoryId = this.allCategoryList[idx].category_id;
-      const tempForsubCatList = this.allCategoryList[idx].subcategory;
+      this.selectedCatName = this.allCategoryList[index].category_name;
+      this.selectedCategoryId = this.allCategoryList[index].category_id;
+      const tempForsubCatList = this.allCategoryList[index].subcategory;
       this.subCategoryList = tempForsubCatList.filter(
         ({ status }) => status !== '0'
       );
+      this.assignCatCopy();
       this.isSubCategoryShow = true;
     }
   }
@@ -354,6 +362,7 @@ export class CatogoriesComponent implements OnInit {
           this.allCategoryList = this.allCategoryList.filter(
             ({ category_id }) => category_id !== cat.category_id
           );
+          this.assignCatCopy();
           this.toastr.error('Category deleted successfully', 'Done.!!');
           // this.ngxLoader.stop();
         } else {
@@ -384,6 +393,7 @@ export class CatogoriesComponent implements OnInit {
           this.subCategoryList = this.subCategoryList.filter(
             ({ subcategory_id }) => subcategory_id !== subCat?.subcategory_id
           );
+          this.assignCatCopy();
           if (this.subCategoryList.length === 0) this.backToCategoryList();
           this.toastr.error('Sub category deleted successfully', 'Done.!!');
           // this.ngxLoader.stop();
@@ -404,8 +414,31 @@ export class CatogoriesComponent implements OnInit {
     this.isSubCategoryShow = false;
   }
 
-  public applyFilter(filterValue: string): void {
-    // const tempArrayForAllCategory = this.allCategoryList;
-    // this.allCategoryList = this.allCategoryList.filter(ele=>ele.category_name.includes(filterValue));
+  public applyFilter(value: string): void {
+    if (!value) {
+      this.assignCatCopy();
+    }
+    if (this.isSubCategoryShow) {
+      this.filteredSubCategoryList = Object.assign(
+        [],
+        this.subCategoryList
+      ).filter(
+        (item) =>
+          item.subcategory_name.toLowerCase().indexOf(value.toLowerCase()) > -1
+      );
+    } else {
+      this.filteredCatCopy = Object.assign([], this.allCategoryList).filter(
+        (item) =>
+          item.category_name.toLowerCase().indexOf(value.toLowerCase()) > -1
+      );
+    }
+  }
+
+  assignCatCopy(): void {
+    if (this.isSubCategoryShow) {
+      this.filteredSubCategoryList = Object.assign([], this.subCategoryList);
+    } else {
+      this.filteredCatCopy = Object.assign([], this.allCategoryList);
+    }
   }
 }

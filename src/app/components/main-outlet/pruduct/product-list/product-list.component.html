@@ -66,6 +66,9 @@
             class="form-control"
             placeholder="Type to search product"
             type="text"
+            #myInput
+            [(ngModel)]="searchValue"
+            (input)="applyFilter(myInput.value)"
           />
         </div>
       </div>
@@ -81,7 +84,7 @@
 <div class="row" *ngIf="allProductList.length > 0 && !isEdit">
   <div
     class="col-sm-6 col-md-4"
-    *ngFor="let item of allProductList; let i = index"
+    *ngFor="let item of filteredAllProductList; let i = index"
   >
     <div class="card card-accent-primary">
       <div class="card-header">
@@ -92,7 +95,7 @@
               type="checkbox"
               class="switch-input"
               [checked]="item.status == 1"
-              (change)="onAvailableCheckboxChange(item, i)"
+              (change)="onAvailableCheckboxChange(item)"
             />
             <span
               class="switch-slider"

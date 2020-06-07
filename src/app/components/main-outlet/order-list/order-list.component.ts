@@ -1,8 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+
+import * as jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
 
 import {
   animate,
@@ -62,7 +65,7 @@ export class OrderListComponent implements OnInit {
   public showOrderList: ModalDirective;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  public selectedOrderList: any;
+  public selectedOrder: any;
   public selectedOrderLimit: number;
   constructor(
     public orderService: OrderService,
@@ -100,8 +103,7 @@ export class OrderListComponent implements OnInit {
   }
 
   public onOrderListClick(selectedOrder): void {
-    this.selectedOrderList = selectedOrder.orderList;
-    console.log(this.selectedOrderList);
+    this.selectedOrder = selectedOrder;
     this.showOrderList.show();
   }
 
@@ -131,7 +133,7 @@ export class OrderListComponent implements OnInit {
       if (res.status === 'Ok') {
         this.selectedOrderLimit = Number(res.data);
       } else {
-        console.log("Somthing goes wrong..!!");
+        console.log('Somthing goes wrong..!!');
       }
       this.openModelForOrderLimit.hide();
     }),
@@ -140,22 +142,40 @@ export class OrderListComponent implements OnInit {
       };
   }
 
-
   public setOrderLimit(): void {
     const limitPayload = {
-      order_limit : this.selectedOrderLimit
-    }
+      order_limit: this.selectedOrderLimit,
+    };
     this.orderService.setOrderLimit(limitPayload).subscribe((res) => {
       if (res.status === 'Ok') {
-        this.toastr.success('Oreder Limit set.','Done.!!');
+        this.toastr.success('Oreder Limit set.', 'Done.!!');
       } else {
-        this.toastr.error('Try agin later','Oops..!!');
+        this.toastr.error('Try agin later', 'Oops..!!');
       }
       this.openModelForOrderLimit.hide();
     }),
       (err) => {
-        this.toastr.error('Try agin later','Oops..!!');
+        this.toastr.error('Try agin later', 'Oops..!!');
         console.log(err);
       };
+  }
+
+  public convetToPDF() {
+    var data = document.getElementById('contentToConvert');
+    html2canvas(data).then((canvas) => {
+      // Few necessary setting options
+      var imgWidth = 208;
+      var pageHeight = 295;
+      var imgHeight = (canvas.height * imgWidth) / canvas.width;
+      var heightLeft = imgHeight;
+
+      const contentDataURL = canvas.toDataURL('image/png');
+      let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
+      var position = 0;
+      pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
+      pdf.save(
+        `${this.selectedOrder?.Users?.full_name}_${this.selectedOrder?.Users?.phone}_${this.selectedOrder?.order_date}.pdf`
+      ); // Generated PDF
+    });
   }
 }

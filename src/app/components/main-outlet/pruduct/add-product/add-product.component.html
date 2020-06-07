@@ -339,8 +339,8 @@
                   </div>
                   <div class="col-4">
                     <select
-                      id="city"
-                      name="City"
+                      id="discountRateUnit"
+                      name="discountRateUnit"
                       class="form-control"
                       formControlName="discountRateUnit"
                       (change)="calcuatediscountPrice()"
@@ -370,7 +370,23 @@
               </div>
             </div>
             <div class="col-3">
-              <label for="button"></label>
+              <div class="form-group">
+                <label for="company">Max Quantity</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  min="1"
+                  id="category_name"
+                  placeholder="Enter max quantity"
+                  formControlName="max_quantity"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-8"></div>
+            <div class="col-4">
               <button
                 type="button"
                 class="btn btn-block btn-warning saveOfferButton"
@@ -385,6 +401,7 @@
               </button>
             </div>
           </div>
+
           <label *ngIf="offerList.length > 0"
             ><strong>Added Offer List (Manage Offers).</strong></label
           >
@@ -392,12 +409,22 @@
             <div class="col-4" *ngFor="let item of offerList; let i = index">
               <alert type="info">
                 <div class="row">
-                  <div class="col-10" (click)="onOfferChangeDetailsClick(item)">
-                    {{ item.item_discount_percent || item.item_discount_rupee
-                    }} {{
-                      item.item_discount_percent !== "" ? "%" : "₹"
-                    }}
-                    Discount on {{ item.item_quantity }}/{{ item.item_unit }}
+                  <div
+                    class="col-10"
+                    *ngIf="item.item_mrp != item.item_discount_price"
+                    (click)="onOfferChangeDetailsClick(item)"
+                  >
+                    {{ item.item_discount_percent || item.item_discount_rupee }}
+                    {{ item.item_discount_percent !== "" ? "%" : "₹" }} Discount
+                    on {{ item.item_quantity }}/{{ item.item_unit }}
+                  </div>
+                  <div
+                    class="col-10"
+                    *ngIf="item.item_mrp == item.item_discount_price"
+                    (click)="onOfferChangeDetailsClick(item)"
+                  >
+                    ₹{{ item.item_discount_price }} on
+                    {{ item.item_quantity }}/{{ item.item_unit }}
                   </div>
                   <div class="col-2">
                     <a (click)="onRemoveOffer(i)">

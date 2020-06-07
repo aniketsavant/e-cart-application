@@ -70,5 +70,9 @@ export const CONSTANT = {
       label: 'Gram',
       value: 'Gm',
     },
+    {
+      label: 'Bottle',
+      value: 'Btl'
+    }
   ],
 };

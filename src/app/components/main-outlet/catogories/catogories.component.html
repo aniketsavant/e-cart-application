@@ -109,7 +109,7 @@
 <div class="row" *ngIf="isSubCategoryShow">
   <div
     class="col-sm-6 col-md-4"
-    *ngFor="let cat of subCategoryList; let i = index"
+    *ngFor="let cat of filteredSubCategoryList; let i = index"
   >
     <div class="card card-accent-primary" [hidden]="cat.status ==='0'">
       <a class="categories">

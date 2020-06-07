@@ -342,8 +342,10 @@ export class CatogoriesComponent implements OnInit {
       this.subCategoryList = tempForsubCatList.filter(
         ({ status }) => status !== '0'
       );
-      this.assignCatCopy();
+    this.searchValue='';
       this.isSubCategoryShow = true;
+      this.assignCatCopy();
+
     }
   }
 
@@ -411,7 +413,9 @@ export class CatogoriesComponent implements OnInit {
   }
 
   public backToCategoryList() {
+    this.searchValue = '';
     this.isSubCategoryShow = false;
+    this.assignCatCopy();
   }
 
   public applyFilter(value: string): void {

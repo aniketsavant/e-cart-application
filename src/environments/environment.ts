@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  BASE_URL: "http://wesoftec.com/ecart/ecartapi/"
+  BASE_URL: "https://www.clickandshopindia.in/ecartapi/"
 };
 
 /*

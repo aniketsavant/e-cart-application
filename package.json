@@ -24,6 +24,7 @@
     "@coreui/angular": "^2.9.2",
     "@coreui/coreui": "^2.1.16",
     "@coreui/icons": "0.3.0",
+    "bn-ng-idle": "^1.0.1",
     "bootstrap": "^4.4.1",
     "core-js": "^2.6.11",
     "font-awesome": "^4.7.0",

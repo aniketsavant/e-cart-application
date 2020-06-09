@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { BnNgIdleService } from 'bn-ng-idle'; // import bn-ng-idle service
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
@@ -89,6 +90,7 @@ import { LoginService } from './services/login.service';
     CanActivateViaAuthGuardForLogin,
     LoginService,
     CategoryService,
+    BnNgIdleService
   ],
   bootstrap: [AppComponent],
 })

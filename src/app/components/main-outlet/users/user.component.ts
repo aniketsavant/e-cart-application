@@ -19,12 +19,12 @@ export function getAlertConfig(): AlertConfig {
 })
 export class UserComponent implements OnInit {
   displayedColumns: string[] = [
+    'index',
     'user_id',
     'full_name',
     'phone',
     'email',
     'full_address',
-    'role',
     'status',
   ];
   public dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -45,6 +45,7 @@ export class UserComponent implements OnInit {
     this.usersService.getUserList().subscribe((res: UserList[]) => {
       if (res.length > 0) {
         this.userListForDeletUser = res;
+        this.userListForDeletUser = this.userListForDeletUser.filter(user => user.role !== 'ADMIN');
         this.dataSource = new MatTableDataSource(this.userListForDeletUser);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

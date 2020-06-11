@@ -177,7 +177,12 @@
                       <button
                         type="button"
                         class="btn btn-block btn-danger"
-                        *ngIf="element.status !== 'reject'"
+                        *ngIf="
+                          element.status !== 'accept' &&
+                          element.status !== 'dispatch' &&
+                          element.status !== 'delivered' &&
+                          element.status !== 'reject'
+                        "
                         (click)="changeOrderStatus(element.id, 'reject')"
                       >
                         Reject

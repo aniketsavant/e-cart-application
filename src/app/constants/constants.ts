@@ -73,6 +73,14 @@ export const CONSTANT = {
     {
       label: 'Bottle',
       value: 'Btl'
+    },
+    {
+      label: 'Dazzon',
+      value: 'Dzn'
+    },
+    {
+      label: 'Unit',
+      value: 'Unit'
     }
   ],
 };

@@ -67,6 +67,7 @@ export class OrderListComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public selectedOrder: any;
   public selectedOrderLimit: number;
+  public delivery_charges: number;
   constructor(
     public orderService: OrderService,
     private toastr: ToastrService
@@ -131,7 +132,8 @@ export class OrderListComponent implements OnInit {
   public getOrderLimit(): void {
     this.orderService.getOrderLimit().subscribe((res) => {
       if (res.status === 'Ok') {
-        this.selectedOrderLimit = Number(res.data);
+        this.selectedOrderLimit = Number(res.data.order_limit_price);
+        this.delivery_charges = Number(res.data.delivery_charges);
       } else {
         console.log('Somthing goes wrong..!!');
       }
@@ -145,6 +147,7 @@ export class OrderListComponent implements OnInit {
   public setOrderLimit(): void {
     const limitPayload = {
       order_limit: this.selectedOrderLimit,
+      delivery_charges: this.delivery_charges
     };
     this.orderService.setOrderLimit(limitPayload).subscribe((res) => {
       if (res.status === 'Ok') {

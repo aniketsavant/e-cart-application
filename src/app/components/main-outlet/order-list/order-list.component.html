@@ -357,7 +357,6 @@
             class="form-control"
             id="orderLimti"
             placeholder="Enter Amount to set order limit."
-            minlength="0"
             [(ngModel)]="selectedOrderLimit"
           />
         </div>
@@ -368,7 +367,6 @@
             class="form-control"
             id="deliveryCharges"
             placeholder="Enter Delivery Charges."
-            minlength="0"
             [(ngModel)]="delivery_charges"
           />
         </div>
@@ -384,7 +382,7 @@
         <button
           type="button"
           class="btn btn-primary"
-          *ngIf="selectedOrderLimit"
+          *ngIf="selectedOrderLimit >=0 && delivery_charges>=0"
           (click)="setOrderLimit()"
         >
           Save changes

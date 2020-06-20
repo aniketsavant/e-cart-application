@@ -42,7 +42,7 @@
                 <option value="0">Select Category</option>
                 <option
                   *ngFor="
-                    let category of allSubCategoryList | slice: 1;
+                    let category of allSubCategoryList;
                     let i = index
                   "
                   [value]="category.subcategory_id"

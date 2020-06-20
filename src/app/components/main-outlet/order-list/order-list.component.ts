@@ -48,6 +48,7 @@ export function getAlertConfig(): AlertConfig {
 })
 export class OrderListComponent implements OnInit {
   columnsToDisplay: string[] = [
+    'index',
     'product_id',
     'full_name',
     'phone',
@@ -108,10 +109,11 @@ export class OrderListComponent implements OnInit {
     this.showOrderList.show();
   }
 
-  public changeOrderStatus(orderId: string, statusValue: string): void {
+  public changeOrderStatus(order: any, statusValue: string): void {
     const tempPayloadForChangeStatus = {
       status: statusValue,
-      id: orderId,
+      id: order.id,
+      user_id: order?.Users?.user_id
     };
     this.orderService
       .changeOrderStatus(tempPayloadForChangeStatus)

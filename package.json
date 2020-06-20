@@ -27,6 +27,7 @@
     "bn-ng-idle": "^1.0.1",
     "bootstrap": "^4.4.1",
     "core-js": "^2.6.11",
+    "extentia-grid": "^1.0.14",
     "font-awesome": "^4.7.0",
     "html2canvas": "^1.0.0-rc.5",
     "jspdf": "^1.5.3",

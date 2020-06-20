@@ -365,7 +365,7 @@ export class CatogoriesComponent implements OnInit {
             ({ category_id }) => category_id !== cat.category_id
           );
           this.assignCatCopy();
-          this.toastr.error('Category deleted successfully', 'Done.!!');
+          this.toastr.success('Category deleted successfully', 'Done.!!');
           // this.ngxLoader.stop();
         } else {
           this.toastr.error('Somthing wrong', 'Oops.!!');

@@ -41,6 +41,13 @@
           class="mat-elevation-z8"
           matSort
         >
+
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <strong>Sr No.</strong>
+          </th>
+          <td mat-cell *matCellDef="let element;let i = dataIndex">{{i+1}}</td>
+        </ng-container>
           <ng-container matColumnDef="product_id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <strong>ID</strong>
@@ -140,7 +147,7 @@
                           element.status !== 'delivered' &&
                           element.status !== 'reject'
                         "
-                        (click)="changeOrderStatus(element.id, 'accept')"
+                        (click)="changeOrderStatus(element, 'accept')"
                       >
                         Accept
                       </button>
@@ -154,7 +161,7 @@
                           element.status !== 'delivered' &&
                           element.status !== 'reject'
                         "
-                        (click)="changeOrderStatus(element.id, 'dispatch')"
+                        (click)="changeOrderStatus(element, 'dispatch')"
                       >
                         Dispatch
                       </button>
@@ -167,7 +174,7 @@
                           element.status !== 'delivered' &&
                           element.status !== 'reject'
                         "
-                        (click)="changeOrderStatus(element.id, 'delivered')"
+                        (click)="changeOrderStatus(element, 'delivered')"
                       >
                         Delivered
                       </button>
@@ -183,7 +190,7 @@
                           element.status !== 'delivered' &&
                           element.status !== 'reject'
                         "
-                        (click)="changeOrderStatus(element.id, 'reject')"
+                        (click)="changeOrderStatus(element, 'reject')"
                       >
                         Reject
                       </button>
@@ -192,7 +199,7 @@
                       <button
                         type="button"
                         class="btn btn-block btn-dark"
-                        (click)="changeOrderStatus(element.id, 'remove')"
+                        (click)="changeOrderStatus(element, 'remove')"
                       >
                         Remove
                       </button>

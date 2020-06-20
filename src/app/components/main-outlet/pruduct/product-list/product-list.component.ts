@@ -108,11 +108,21 @@ export class ProductListComponent implements OnInit {
   onCategoryChange(idx) {
     this.allProductList = [];
     this.assignProductListCopy();
-    this.allSubCategoryList =
+    const tempArray =
       idx === '0'
         ? []
         : this.allCategoryList.filter((x) => x.category_id === idx)[0]
             ?.subcategory;
+    const index = this.allCategoryList.findIndex(
+      (cat) => cat.category_id === idx
+    );
+
+    const tempArrayForAllSubCat = tempArray.filter(
+      ({ subcategory_name }) =>
+        subcategory_name.toLowerCase() !==
+        this.allCategoryList[index]?.category_name.toLowerCase()
+    );
+    this.allSubCategoryList = tempArrayForAllSubCat;
     if (this.allSubCategoryList.length == 1) {
       this.getAllProducts(this.allSubCategoryList[0].subcategory_id);
     }

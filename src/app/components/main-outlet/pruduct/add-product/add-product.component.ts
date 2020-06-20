@@ -292,7 +292,13 @@ export class AddProductComponent implements OnInit {
   onCategoryChange(idx) {
     this.allSubCategoryList = [];
     if (this.allCategoryList[idx]?.subcategory.length > 1) {
-      this.allSubCategoryList = this.allCategoryList[idx]?.subcategory;
+      const tempArrayForAllSubCat = this.allCategoryList[
+        idx
+      ]?.subcategory.filter(
+        ({ subcategory_name }) =>
+          subcategory_name.toLowerCase() !== this.allCategoryList[idx]?.category_name.toLowerCase()
+      );
+      this.allSubCategoryList = tempArrayForAllSubCat;
     } else {
       this.productForm.controls['productSubCategory'].patchValue(
         this.allCategoryList[idx]?.subcategory[0].subcategory_id

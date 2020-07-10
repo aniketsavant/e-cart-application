@@ -123,8 +123,13 @@ export class ProductListComponent implements OnInit {
         this.allCategoryList[index]?.category_name.toLowerCase()
     );
     this.allSubCategoryList = tempArrayForAllSubCat;
-    if (this.allSubCategoryList.length == 1) {
-      this.getAllProducts(this.allSubCategoryList[0].subcategory_id);
+    const indexForSubCat = tempArray.findIndex(
+      (subCat) =>
+        subCat.subcategory_name.toLowerCase() ===
+        this.allCategoryList[index]?.category_name.toLowerCase()
+    );
+    if (this.allSubCategoryList.length == 0) {
+      this.getAllProducts(tempArray[indexForSubCat].subcategory_id);
     }
   }
 

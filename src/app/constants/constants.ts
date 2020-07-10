@@ -59,6 +59,10 @@ export const CONSTANT = {
       value: 'Kg',
     },
     {
+      label: 'Milileter',
+      value: 'Ml',
+    },
+    {
       label: 'Liter',
       value: 'Ltr',
     },

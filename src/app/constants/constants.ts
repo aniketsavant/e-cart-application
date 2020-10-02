@@ -67,6 +67,10 @@ export const CONSTANT = {
       value: 'Ltr',
     },
     {
+      label: 'Rupee',
+      value: 'Rs',
+    },
+    {
       label: 'Packet',
       value: 'Pkt',
     },
